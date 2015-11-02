@@ -1,0 +1,4086 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Vetash Custom Joystick Backend</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="semantic/dist/semantic.min.js"></script>
+	<!-- <link rel="stylesheet" type="text/css" href="style/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="style/jquery-ui.structure.min.css">
+	<link rel="stylesheet" type="text/css" href="style/jquery-ui.theme.min.css"> -->
+	<link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+	<!-- additional -->
+	<style type=text/css>
+		body{
+			font-family: "微軟正黑體", "Microsoft JhengHei" !important;
+		}
+		h1{
+			font-family: "微軟正黑體", "Microsoft JhengHei" !important;
+		}
+	</style>
+	<style>
+		body{
+			height:100%;
+			background-color:#EDEDED;
+		}
+		*{
+			/* border:1px solid green; */
+		}
+		.pure{
+			margin: 0px !important;
+			padding: 0px !important;
+		}
+		.purePaded{
+			margin: 0px !important;
+		}
+		#headder{
+			height:10%;
+		}
+		#mainContainer{
+			height:85%;
+		}
+		#footer{
+			height:5%;
+		}
+		.addCursor{
+			cursor:pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="ui container" id="headder">
+		<div class="ui menu">
+			<img src="images/logo_l.png" class="ui middle aligned image" style="max-height:30px;margin:10px">
+			<div class="right menu">
+				<div class="item logoutBlock">
+					<div class="ui primary button ">Logout</div>
+					<form action="./accessback" method="post" style="display:none">
+						<input type="hidden" name="task" value="logout">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui container" id="mainContainer">
+		<div class="ui nine item pointing top attached blue tabular menu" id="mainMenu">
+			<a class="item active" data-tab="tab-name1" id="tab-name1">零件</a>
+			<a class="item" data-tab="tab-name2" id="tab-name2">顧客</a>
+			<a class="item" data-tab="tab-name3" id="tab-name3">供應商</a>
+			<a class="item" data-tab="tab-name4" id="tab-name4">訂單</a>
+			<a class="item" data-tab="tab-name5" id="tab-name5">折扣碼</a>
+			<a class="item" data-tab="tab-name6" id="tab-name6">庫存紀錄</a>
+			<a class="item" data-tab="tab-name7" id="tab-name7">圖片管理</a>
+			<a class="item" data-tab="tab-name8" id="tab-name8">設定</a>
+		</div>
+		<div class="ui bottom attached segment tab active" data-tab="tab-name1"><!-- Product -->
+			<div id="Product" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="row">
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned twelve wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="productType">種類</option>
+										<option value="productId">料號</option>
+										<option value="productName">品名</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>
+								<input type="checkbox" class="checkboxControl">
+							</th>
+							<th>料號</th>
+							<th>種類</th>
+							<th>品名</th>
+							<th>售價</th>
+							<th>成本</th>
+							<th>庫存</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table><!-- table -->
+
+				<div class="ui small modal" id="Product_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								Product
+								<div class="sub header"></div>
+							</div>
+						</h2>
+
+						<form class="ui form">
+							<div class="three fields">
+								<div class="field" id="productIdField">
+									<label>料號</label>
+									<input type="text" name="productId">
+								</div>
+								<div class="field" id="productTypeField">
+									<label>種類</label>
+									<!-- <input name="productType" type="text" placeholder=""> -->
+									<div class="ui selection dropdown">
+										<input name="productType" type="hidden">
+										<i class="dropdown icon"></i>
+										<div class="default text">請輸入種類</div>
+										<div class="menu">
+											<div class="item" data-value="框體">框體</div>
+											<div class="item" data-value="搖桿">搖桿</div>
+											<div class="item" data-value="按鍵">按鍵</div>
+											<div class="item" data-value="機板">機板</div>
+											<div class="item" data-value="OTHER">OTHER</div>
+										</div>
+									</div>
+								</div>
+								<div class="field">
+									<label>品名</label>
+									<input type="text" name="productName" placeholder="">
+								</div>
+							</div>
+							<div class="three fields">
+								<div class="field">
+									<label>售價</label>
+									<input type="text" name="productPrice" placeholder="">
+								</div>
+								<div class="field" id="productCostField">
+									<label>成本</label>
+									<input type="text" name="productCost" placeholder="">
+								</div>
+								<div class="field">
+									<label>庫存</label>
+									<input type="text" name="productQty" placeholder="">
+								</div>
+							</div>
+							<div class="fields">
+								<div class="five wide field" id="productColorField">
+									<label>顯示顏色</label>
+									<div class="ui selection dropdown">
+										<input name="productColor" type="hidden">
+										<i class="dropdown icon"></i>
+										<div class="default text">請選擇顏色</div>
+										<div class="menu">
+											<div class="item" data-value="red">紅</div>
+											<div class="item" data-value="blue">藍</div>
+											<div class="item" data-value="dblue">深藍</div>
+											<div class="item" data-value="black">黑</div>
+											<div class="item" data-value="purple">紫</div>
+											<div class="item" data-value="orange">橙</div>
+											<div class="item" data-value="dorange">深橙</div>
+											<div class="item" data-value="white">白</div>
+											<div class="item" data-value="grey">灰</div>
+											<div class="item" data-value="yellow">黃</div>
+											<div class="item" data-value="pink">粉</div>
+											<div class="item" data-value="green">綠</div>
+										</div>
+									</div>
+								</div>
+								<div class="eleven wide field">
+									<label>圖片網址</label>
+									<input type="text" name="productImgPath">
+								</div>
+							</div>
+							<div class="field">
+								<label>內容</label>
+								<textarea name="productNote" cols="20" rows="5"></textarea>
+							</div>
+							<input type="hidden" name="task"><!-- insert or update -->
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+			</div>
+		</div><!-- Product -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name2"><!-- Customer -->
+			<div id="Customer" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="two column row">
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned twelve wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text" name="keyword">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="customerTel">電話</option>
+										<option value="customerName">名稱</option>
+										<option value="customerLine">Line</option>
+										<option value="customerFb">facebook</option>
+										<option value="customerMail">E-mail</option>
+										<option value="customerNote">備註</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>
+								<input type="checkbox" class="checkboxControl">
+							</th>
+							<th>名稱</th>
+							<th>電話</th>
+							<th>Line ID</th>
+							<th>facebook</th>
+							<th>E-mail</th>
+							<th>收件地址</th>
+							<th>備註</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table><!-- table -->
+
+				<div class="ui small modal" id="Customer_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								Customer
+								<div class="sub header"></div>
+							</div>
+						</h2>
+
+						<form class="ui form">
+							<div class="three fields">
+								<div class="field">
+									<label>名稱</label>
+									<input type="text" name="customerName" placeholder="">
+								</div>
+								<div class="field" id="customerTelField">
+									<label>電話</label>
+									<div class="ui right icon input">
+										<input type="text" name="customerTel" placeholder="">
+										<i class="icon" style="display:none"></i>
+									</div>
+									<input type="hidden" name="customerTelTest">
+								</div>
+							</div>
+							<div class="three fields">
+								<div class="field">
+									<label>Line ID</label>
+									<input type="text" name="customerLine" placeholder="">
+								</div>
+								<div class="field">
+									<label>facebook</label>
+									<input type="text" name="customerFb" placeholder="">
+								</div>
+								<div class="field">
+									<label>E-mail</label>
+									<input type="text" name="customerMail" placeholder="">
+								</div>
+							</div>
+							<div class="field">
+								<label>收件地址</label>
+								<input type="text" name="customerAddr" placeholder="">
+							</div>
+							<div class="field">
+								<label>備註</label>
+								<textarea name="customerNote" cols="20" rows="5"></textarea>
+							</div>
+							<input type="hidden" name="task"><!-- insert or update -->
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+			</div>
+		</div><!-- Customer -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name3"><!-- Supplier -->
+			<div id="Supplier" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="two column row">
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned twelve wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text" name="keyword">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="selectByTel">電話</option>
+										<option value="selectByName">名稱</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>
+								<input type="checkbox" class="checkboxControl">
+							</th>
+							<th>編號</th>
+							<th>公司名</th>
+							<th>聯絡人</th>
+							<th>電話</th>
+							<th>匯款帳號</th>
+							<th>備註</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table><!-- table -->
+
+				<div class="ui small modal" id="Supplier_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								Supplier
+								<div class="sub header"></div>
+							</div>
+						</h2>
+
+						<form class="ui form">
+							<div class="fields">
+								<div class="two wide field" id="supplierIdField">
+									<label>編號</label>
+									<input type="text" readonly="" name="supplierId" placeholder="">
+								</div>
+								<div class="eight wide field">
+									<label>公司名</label>
+									<input type="text" name="supplierName" placeholder="">
+								</div>
+							</div>
+							<div class="three fields">
+								<div class="field">
+									<label>統一編號</label>
+									<input type="text" name="supplierTax" placeholder="">
+								</div>
+								<div class="field">
+									<label>聯絡人</label>
+									<input type="text" name="supplierContact" placeholder="">
+								</div>
+								<div class="field">
+									<label>電話</label>
+									<input type="text" name="supplierTel" placeholder="">
+								</div>
+							</div>
+							<div class="fields">
+								<div class="eight wide field">
+									<label>地址</label>
+									<input type="text" name="supplierAddr" placeholder="">
+								</div>
+								<div class="four wide field">
+									<label>匯款帳號</label>
+									<input type="text" name="supplierAcct" placeholder="">
+								</div>
+								<div class="four wide field">
+									<label>首次交易日</label>
+									<input type="date" name="supplierDate" placeholder="yyyy-MM-dd">
+								</div>
+							</div>
+							<div class="field">
+								<label>備註</label>
+								<textarea name="supplierNote" cols="20" rows="5"></textarea>
+							</div>
+							<input type="hidden" name="task"><!-- insert or update -->
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+			</div>
+		</div><!-- Supplier -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name4"><!-- Order -->
+			<div id="Order" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="row">
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<!-- <button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button> -->
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned twelve wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="tel">顧客電話</option>
+										<option value="date">下訂日期</option>
+										<option value="note">業者備註</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>
+								<input type="checkbox" class="checkboxControl">
+							</th>
+							<th>訂單編號</th>
+							<th>下訂日期</th>
+							<th>顧客名稱</th><!-- 從顧客table查 -->
+							<th>顧客電話</th>
+							<th>成交價格</th>
+							<th>訂單狀態</th>
+							<th>業者備註</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table><!-- table -->
+
+				<div class="ui modal" id="Order_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								訂單
+								<div class="sub header"></div>
+							</div>
+						</h2>
+						<form class="ui form">
+							<div class="ui grid purePaded">
+								<div class="row">
+									<div class="column">
+										<div class="ui three fields">
+											<div class="field">
+												<label>訂單編號</label>
+												<input type="text" name="orderNo" placeholder="" readonly="">
+											</div>
+											<div class="field">
+												<label>下訂日期</label>
+												<input name="orderDate" type="text" placeholder="" readonly="">
+											</div>
+											<div class="field orderStateField">
+												<label>訂單狀態</label>
+												<div class="ui selection dropdown">
+													<input name="orderState" type="hidden">
+													<i class="dropdown icon"></i>
+													<div class="default text"></div>
+													<div class="menu">
+														<div class="item" data-value="已下訂(特殊)" style="display:none">已下訂(特殊)</div>
+														<div class="item" data-value="已下訂(普通)" style="display:none">已下訂(普通)</div>
+														<div class="item confirmed" data-value="已確認">已確認</div>
+														<div class="item payed" data-value="已結帳">已結帳</div>
+														<div class="item send" data-value="已出貨">已出貨</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="ui fields">
+											<div class="four wide field">
+												<label>成交價格</label>
+												<input type="text" name="price" placeholder="">
+											</div>
+											<div class="four wide field">
+												<label>折扣價</label>
+												<input type="text" name="coupon" placeholder="" readonly="">
+											</div>
+										</div>
+										<div class="ui three fields">
+											<div class="field">
+												<label>付款方式</label>
+												<input type="text" name="paymentType" placeholder="" readonly="">
+											</div>
+											<div class="field">
+												<label>歐付寶編號</label>
+												<input type="text" name="allPayTradeNo" placeholder="" readonly="">
+											</div>
+											<div class="field">
+												<label>歐付寶手續費</label>
+												<input type="text" name="paymentTypeChargeFee" placeholder="" readonly="">
+											</div>
+										</div>
+										<div class="ui two fields">
+											<div class="field">
+												<label>訂單備註</label>
+												<textarea name="orderNotes" cols="20" rows="5" readonly=""></textarea>
+											</div>
+											<div class="field">
+												<label>業者備註</label>
+												<textarea name="bossNotes" cols="20" rows="5"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="ui header">
+								寄送資訊
+							</div>
+							<div class="ui grid purePaded">
+								<div class="column">
+									<div class="ui fields">
+										<div class="four wide field">
+											<label>取件方式</label>
+											<input type="text" name="receiveType" placeholder="" readonly="">
+										</div>
+										<div class="eight wide field">
+											<label>取件地址</label>
+											<input type="text" name="customerAddr" placeholder="" readonly="">
+										</div>
+										<div class="four wide field">
+											<label>到貨日期</label>
+											<input type="date" name="deliveryDate">
+										</div>
+									</div>
+									<div class="field">
+										<label>取件備註</label>
+										<textarea name="receiveNotes" cols="20" rows="5" readonly=""></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div class="ui header">
+								顧客資料
+							</div>
+							<div class="ui grid purePaded">
+								<div class="column">
+									<div class="field">
+										<label>名稱</label>
+										<input type="text" name="customerName" placeholder="" readonly="">
+									</div>
+									<div class="field">
+										<label>電話</label>
+										<input type="text" name="customerTel" placeholder="" readonly="">
+									</div>
+									<div class="field">
+										<label>Line ID</label>
+										<input type="text" name="customerLine" placeholder="" readonly="">
+									</div>
+									<div class="field">
+										<label>facebook</label>
+										<input type="text" name="customerFb" placeholder="" readonly="">
+									</div>
+									<div class="field">
+										<label>E-mail</label>
+										<input type="text" name="customerMail" placeholder="" readonly="">
+									</div>
+									<div class="field">
+										<label>顧客備註</label>
+										<textarea name="customerNote" cols="20" rows="5" readonly=""></textarea>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="ui header">
+								訂單明細
+							</div>
+							<div class="ui grid purePaded">
+								<div class="row">
+									<div class="six wide column">
+										<div class="field">
+											<label>框體</label>
+											<input type="text"  name="housing" />
+										</div>
+										<div class="field">
+											<label>搖桿</label>
+											<input type="text"  name="rocker" />
+										</div>
+										<div class="field">
+											<label>系統</label>
+											<input type="text"  name="board" />
+										</div>
+										<h5 class="ui dividing header">面板圖</h5>
+										<img src="images/fakeImg_L.png" class="ui image coverImg">
+										<input type="text" name="coverImg" />
+									</div>
+									<div class="five wide column">
+										<h5 class="ui dividing header">主按鍵</h5>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													L1
+												</div>
+												<input type="text"  name="l1" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													L2
+												</div>
+												<input type="text"  name="l2" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													R1
+												</div>
+												<input type="text"  name="r1" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													R2
+												</div>
+												<input type="text"  name="r2" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													◎
+												</div>
+												<input type="text"  name="o" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													X
+												</div>
+												<input type="text"  name="x" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													◇
+												</div>
+												<input type="text"  name="square" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													△
+												</div>
+												<input type="text"  name="triangle" />
+											</div>
+										</div>
+									</div>
+									<div class="five wide column">
+										<h5 class="ui dividing header">副按鍵</h5>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													Start
+												</div>
+												<input type="text"  name="start" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													Select
+												</div>
+												<input type="text"  name="selecter" />
+											</div>
+										</div>
+										<div class="field">
+											<div class="ui labeled input">
+												<div class="ui label">
+													Touch
+												</div>
+												<input type="text"  name="touch" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<input type="hidden" name="task"><!-- only update -->
+
+							<div class="ui grid">
+								<div class="right floated right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+
+			</div>
+		</div><!-- Order -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name5"><!-- Coupons -->
+			<div id="Coupons" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="two column row">
+
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+
+							<div class="right floated right aligned column">
+								<div class="ui input disabled searchInput">
+									<input placeholder="Search..." type="text">
+								</div>
+
+								<button class="ui icon disabled button btnSearch">
+									<i class="search icon"></i>
+								</button>
+							</div>
+
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>
+								<input type="checkbox" id="couponSelectAllCheckbox">
+							</th>
+							<th>折扣碼</th>
+							<th>價值</th>
+							<th>使用期限</th>
+							<th>使用次數</th>
+							<th>備註</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table>
+
+				<div class="ui small modal" id="couponModal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								Coupons
+								<div class="sub header" id="couponModalSubHeader"></div>
+							</div>
+						</h2>
+
+						<form class="ui form" id="couponModalForm">
+							<div class="three fields">
+								<div class="field">
+									<label>折扣碼</label>
+									<div class="ui icon input">
+										<input type="text" name="coupon" maxlength="8" placeholder="">
+										<i class="inverted circular link icon random" id="random"></i>
+									</div>
+								</div>
+							</div>
+							<div class="three fields">
+								<div class="field">
+									<label>價值</label>
+									<input type="text" name="discount" placeholder="">
+								</div>
+								<div class="field">
+									<label>使用期限</label>
+									<input type="date" name="deadline" placeholder="yyyy-MM-dd">
+								</div>
+								<div class="field">
+									<label>使用次數</label>
+									<input type="text" name="times" placeholder="">
+								</div>
+							</div>
+							<div class="field">
+								<label>備註</label>
+								<textarea name="notes" cols="20" rows="5" id="notes"></textarea>
+							</div>
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button" id="couponFormSubmit">Submit</div>
+										<div class="ui tiny reset button" id="couponModalFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<script type="text/javascript"> /*script for coupons_randomGenerate*/
+						function randomWord(num) {
+							var str = "", arr = [ '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b',
+							'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p',
+							'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B',
+							'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+							'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+
+							for (var i = 0; i < num; i++) {
+								pos = Math.round(Math.random() * (arr.length - 1));
+								str += arr[pos];
+							}
+							return str;
+						}
+
+						(function($) {
+							$('#random').bind('click', function() {
+								$('#couponModalForm input[name="coupon"]').val(randomWord(8));
+							});
+						}(jQuery));
+
+
+					</script>
+				</div><!-- modal -->
+
+			</div>
+		</div><!-- Coupons -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name6"><!-- Purchase -->
+			<div id="Purchase" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="row">
+							<div class="left floated four wide column">
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned twelve wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text" name="keyword">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="type">紀錄種類</option>
+										<option value="date">日期</option>
+										<option value="productid">料號</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<table class="ui selectable celed blue table"><!-- table -->
+					<thead>
+						<tr>
+							<th>編號</th>
+							<th>日期</th>
+							<th>種類</th>
+							<th>料號</th>
+							<th>數量</th>
+							<th>進價</th>
+							<th>備註</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- more tr>tds here -->
+					</tbody>
+				</table><!-- table -->
+
+				<div class="ui small modal" id="Purchase_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								PurchaseRecord
+								<div class="sub header"></div>
+							</div>
+						</h2>
+
+						<form class="ui form">
+							<div class="fields">
+								<div class="two wide field">
+									<label>編號</label>
+									<input type="text" name="recordNo" readonly="" placeholder="">
+								</div>
+								<div class="four wide field">
+									<label>日期</label>
+									<input type="text" name="date" readonly="">
+								</div>
+							</div>
+
+							<div class="three fields">
+								<div class="field">
+									<label>料號</label>
+									<div class="ui search" id="Purchase_productId">
+										<div class="ui input">
+											<input  class="prompt" type="text" name="productId" placeholder="">
+										</div>
+									</div>
+								</div>
+								<div class="field">
+									<label>數量</label>
+									<input type="text" name="number" placeholder="">
+								</div>
+								<div class="field purchaseTypeField">
+									<label>種類</label>
+									<div class="ui compact selection dropdown">
+										<input type="hidden" name="purchaseType">
+										<i class="dropdown icon"></i>
+										<div class="default text">請選擇種類</div>
+										<div class="menu">
+											<div class="item" data-value="進貨">進貨</div>
+											<div class="item" data-value="退貨">退貨</div>
+											<div class="item" data-value="修改(增加)">修改(增加)</div>
+											<div class="item" data-value="修改(減少)">修改(減少)</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="field">
+								<label class="transition visible">進價( 進貨 / 退貨時填寫 )</label>
+								<input style="display: inline !important;" class="transition visible" name="prize" type="text">
+							</div>
+
+							<div class="field">
+								<label>備註</label>
+								<textarea name="notes" cols="20" rows="5"></textarea>
+							</div>
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+			</div>
+		</div><!-- Purchase -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name7"><!-- Image -->
+			<div id="Image" class="ui segment">
+				<div class="top attached segment"><!-- buttons -->
+					<div class="ui grid">
+						<div class="row">
+							<div class="left floated six wide column">
+								<div class="ui checkbox">
+									<input type="checkbox" class="checkboxControl">
+									<label></label>
+								</div>
+								<button class="ui icon button btnRefresh">
+									<i class="refresh icon"></i>
+								</button>
+								<div class="ui icon buttons">
+									<button class="ui icon button btnInsert">
+										<i class="plus icon"></i>
+									</button>
+									<button class="ui icon button btnDelete">
+										<i class="remove icon"></i>
+									</button>
+								</div>
+							</div>
+							<div class="right floated right aligned ten wide column searchBlock">
+								<div class="ui action input">
+									<input placeholder="Search..." type="text">
+									<select class="ui compact selection dropdown">
+										<option selected="selected" value="selectByImgCategoryName">類別</option>
+										<option value="selectByName">名稱</option>
+									</select>
+									<div class="ui button">Search</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- buttons -->
+
+				<div class="ui six stackable cards">
+					<!-- <div class="ui card">
+						<div class="image">
+							<div class="ui ribbon label">
+								<input type="checkbox">
+							</div>
+							<img src="images/profile/Model 5th-0531.jpg">
+						</div>
+						<div class="content">
+							<div class="imgId" style="display:none"></div>
+							<a class="header">Profile01</a>
+							<div class="meta">
+								<span class="date">2015/10/1</span>
+							</div>
+						</div>
+					</div> -->
+				</div>
+
+				<div class="ui small modal" id="Image_modal"><!-- modal -->
+					<div class="ui segment">
+						<h2 class="ui header">
+							<i class=" write icon"></i>
+							<div class="content">
+								Image
+								<div class="sub header"></div>
+							</div>
+						</h2>
+
+						<div class="ui item imageItem">
+							<div class="ui center aligned grid pure">
+								<div class="ui image">
+									<img src="" style="max-height:30vh">
+								</div>
+							</div>
+						</div>
+
+						<form class="ui form">
+							<div class="three fields">
+								<input type="hidden" name="imageId">
+								<div class="field">
+									<label>名稱</label>
+									<input type="text" name="imageName" placeholder="">
+								</div>
+								<div class="field">
+									<label>類別</label>
+									<div class="ui selection dropdown">
+										<input name="imgCategoryName" type="hidden">
+										<i class="dropdown icon"></i>
+										<div class="default text">請選擇類別</div>
+										<div class="menu">
+											<div class="item" data-value="相簿">相簿</div>
+											<div class="item" data-value="面板圖">面板圖</div>
+											<div class="item" data-value="其他">其他</div>
+											<div class="item" data-value="首頁">首頁</div>
+										</div>
+									</div>
+								</div>
+								<div class="field imageDateField">
+									<label>新增日期</label>
+									<input type="text" name="imageDate" placeholder="" readonly="">
+								</div>
+							</div>
+
+							<div class="field">
+								<label>網址</label>
+								<input type="text" name="imagePath" placeholder="">
+							</div>
+
+							<input type="hidden" name="task"><!-- insert or update -->
+							<div class="ui grid">
+								<div class="right aligned column">
+									<div class="field actions">
+										<div class="ui tiny blue approve button">Submit</div>
+										<div class="ui tiny reset button btnFormCancel">Cancel</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div><!-- modal -->
+			</div>
+		</div><!-- Image -->
+		<div class="ui bottom attached segment tab" data-tab="tab-name8">
+			<div class="ui segment" id="Setting">
+				<div class="ui middle aligned center aligned grid">
+					<div class="column" style="max-width:450px">
+						<form class="ui large form">
+							<div class="ui segment">
+								<div class="field">
+									<div class="ui left icon input">
+										<i class="user icon"></i>
+										<input name="account" placeholder="請輸入帳號" type="text">
+									</div>
+								</div>
+								<div class="field">
+									<div class="ui left icon input">
+										<i class="lock icon"></i>
+										<input name="password" placeholder="請輸入舊密碼" type="password">
+									</div>
+								</div>
+								<div class="field">
+									<div class="ui left icon input">
+										<i class="lock icon"></i>
+										<input name="newPass1" placeholder="請輸入新密碼" type="password">
+									</div>
+								</div>
+								<div class="field">
+									<div class="ui left icon input">
+										<i class="lock icon"></i>
+										<input name="newPass2" placeholder="請再次輸入新密碼" type="password">
+									</div>
+								</div>
+								<div class="ui fluid large blue button">修改密碼</div>
+							</div>
+							<div class="ui negative message" style="display:none">
+								修改失敗
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+	/*for all mainContent tabs initializing*/
+	$('#mainMenu .item').tab();
+
+	/*Coupons*/
+		/*tab behaviour*/
+			$('#tab-name5').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					coupon_getAllCoupons();
+				}
+			});
+
+		/*btn onclick events*/
+			$('#Coupons .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				coupon_getAllCoupons();
+			});
+
+
+			$('#Coupons .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				coupon_insertCoupon();
+			});
+
+
+			$('#Coupons .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				coupon_getSelectedCouponsToDelete();
+			});
+
+			$('#Coupons .btnSearch').click(function(){
+				console.log("btnSearch clicked");
+				console.log($('#Coupons .searchInput > input'));
+				coupon_searchACoupon($('#Coupons .searchInput > input').val());
+			});
+
+			$('#couponModalFormCancel').click(function(){
+				$('#couponModalForm input[name="coupon"]').val();
+				$('#couponModalForm input[name="discount"]').val();
+				$('#couponModalForm input[name="deadline"]').val();
+				$('#couponModalForm input[name="times"]').val();
+				$('#couponModalForm textarea[name="notes"]').val();
+				$('#couponModal').modal("hide");
+			});
+
+		/*coupon modal initializing*/
+
+			$('#couponFormSubmit').click(function(){
+				$('#couponFormSubmit').addClass('loading');
+				$('#couponFormSubmit').addClass('disabled');
+			});
+
+			$('#Coupons .modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#couponModalForm').form('validate form');
+					return false;
+				}
+			});
+
+		/*functions*/
+
+			function coupon_getAllCoupons(){
+				console.log("coupon_getAllCoupons() called");
+
+				$('#Coupons').addClass('loading');/*loading start*/
+				$('#Coupons .btnRefresh').addClass('loading');
+				$('#Coupons .searchBlock .button').addClass('loading');
+
+				$.ajax({
+					url:'./coupon',
+					type:'get',
+					data:{"task":"select"},
+					dataType:"json",
+					success:function(allCoupons){
+						console.log("coupon_getAllCoupons() successed");
+						coupon_showCoupons(allCoupons);
+					}
+				});
+			}
+
+			function coupon_showCoupons(allCoupons){
+				console.log("coupon_showCoupons() called");
+
+				$('#Coupons').addClass('loading');/*loading start*/
+				$('#Coupons .btnRefresh').addClass('loading');
+				$('#Coupons .searchBlock .button').addClass('loading');
+
+				console.log(allCoupons);
+				$('#Coupons .table > tbody').empty();
+				$.each(allCoupons.results,function(i,coupon){
+					var index = i+1;
+					var couponData = {Title:"Edit an exist Coupon.",
+						Coupon:coupon.Coupon,
+						discount:coupon.discount,
+						Deadline:coupon.Deadline,
+						Times:coupon.Times,
+						Notes:coupon.Notes};
+						console.log($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<tr>').appendTo($('#Coupons .table > tbody'));
+					$('<td>',{html:"<input type='checkbox'>"})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:coupon.Coupon})
+						.addClass("addCursor")
+						.click(function(){coupon_updateCoupon(couponData);})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:coupon.discount})
+						.addClass("addCursor")
+						.click(function(){coupon_updateCoupon(couponData);})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:coupon.Deadline})
+						.addClass("addCursor")
+						.click(function(){coupon_updateCoupon(couponData);})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:coupon.Times})
+						.addClass("addCursor")
+						.click(function(){coupon_updateCoupon(couponData);})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:coupon.Notes})
+						.addClass("addCursor")
+						.click(function(){coupon_updateCoupon(couponData);})
+						.appendTo($('#Coupons .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Coupons').removeClass('loading');/*loading end*/
+				$('#Coupons .btnRefresh').removeClass('loading');
+				$('#Coupons .searchBlock .button').removeClass('loading');
+			}
+
+			function coupon_getSelectedCouponsToDelete(){
+				console.log("coupon_getSelectedCouponsToDelete() called");
+				var checkboxs = $('#Coupons .table > tbody > tr td:first-child > input');
+				$.each(checkboxs,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Coupons .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text());
+						var couponToDelete = $('#Coupons .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text();
+						console.log(couponToDelete);
+						coupon_deleteCoupon(couponToDelete);
+					}
+				})
+			}
+
+			function coupon_deleteCoupon(couponToDelete){
+				console.log("coupon_deleteCoupon() called");
+				$.ajax({
+					url:'./coupon',
+					type:'post',
+					data:{
+						"task":"delete",
+						"coupon":couponToDelete,
+					},
+					success:function(OOXX){
+						console.log("coupon_deleteCoupon() successed");
+						coupon_getAllCoupons();
+					}
+				});
+			}
+
+			function coupon_insertCoupon(){
+				console.log("coupon_insertCoupon() called");
+				var couponData = {Title:"Add a new Coupon.",
+							Coupon:"",
+							discount:"",
+							Deadline:"",
+							Times:"",
+							Notes:""};
+				coupon_showModal(couponData);
+			}
+
+			function coupon_updateCoupon(couponData){
+				console.log("coupon_updateCoupon() called");
+				coupon_showModal(couponData);
+			}
+
+			function coupon_showModal(couponData){
+				console.log("coupon_showModal() called");
+				$('#couponFormSubmit').removeClass('disabled');
+				$('#couponFormSubmit').removeClass('loading');
+				$('#couponModalSubHeader').html(couponData.Title);
+				$('#couponModalForm input[name="coupon"]').val(couponData.Coupon);
+				$('#couponModalForm input[name="discount"]').val(couponData.discount);
+				$('#couponModalForm input[name="deadline"]').val(couponData.Deadline);
+				$('#couponModalForm input[name="times"]').val(couponData.Times);
+				$('#couponModalForm textarea[name="notes"]').val(couponData.Notes);
+				$('#couponModal').modal("show");
+			}
+
+
+		/*form validation setting*/
+			$('#couponModalForm').form({
+				inline:true,
+				fields: {
+					name: {
+						identifier: 'coupon',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入折價碼'
+						}
+						]
+					},
+					discount: {
+						identifier: 'discount',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入價值'
+						},
+						{
+							type   : 'number',
+							prompt : '價值必須為數字'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("successed");
+					console.log("do ajax here");
+					var $couponModalForm = $('#couponModalForm');
+					var couponValuesToSubmit = $couponModalForm.form('get values');
+					console.log(couponValuesToSubmit.coupon);
+					$.ajax({
+						url:'./coupon',
+						type:'post',
+						data:{
+							"task":"createOrUpdate",
+							"coupon":couponValuesToSubmit.coupon,
+							"discount":couponValuesToSubmit.discount,
+							"deadline":couponValuesToSubmit.deadline,
+							"times":couponValuesToSubmit.times,
+							"notes":couponValuesToSubmit.notes
+						},
+						success:function(OOXX){
+							console.log("couponModalForm submit successed");
+							$('#couponModal').modal("hide");
+							coupon_getAllCoupons();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#couponFormSubmit').removeClass('disabled');
+					$('#couponFormSubmit').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#couponSelectAllCheckbox').change(function(){
+				console.log("couponSelectAllCheckbox changed");
+				var isChecked = $('#couponSelectAllCheckbox').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Coupons .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Coupons .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*Coupons*/
+
+	/*Supplier*/
+		/*tab behaviour*/
+			$('#tab-name3').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					Supplier_getAll();
+				}
+			});
+
+		/*refresh*/
+			$('#Supplier .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				Supplier_getAll();
+			});
+
+		/*insert*/
+			$('#Supplier .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				Supplier_insert();
+			});
+
+			function Supplier_insert(){
+				console.log("Supplier_insert() called");
+
+				var row = {Title:"Add a new Supplier.",
+					supplierId:"",
+					supplierName:"",
+					supplierTax:"",
+					supplierContact:"",
+					supplierTel:"",
+					supplierAddr:"",
+					supplierAcct:"",
+					supplierDate:"",
+					supplierNote:"",
+					task:"insert"
+				};
+				Supplier_showModal(row);
+			}
+
+		/*delete*/
+			$('#Supplier .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				Supplier_getSelectedToDelete();
+			});
+
+			function Supplier_getSelectedToDelete(){
+				console.log("Supplier_getSelectedToDelete() called");
+				var checkboxes = $('#Supplier .table > tbody > tr td:first-child > input');
+				$.each(checkboxes,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Supplier .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text());
+						var selectedRow = $('#Supplier .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text();
+						console.log(selectedRow);
+						Supplier_delete(selectedRow);
+					}
+				})
+			}
+
+			function Supplier_delete(selectedRow){
+				console.log("Supplier_delete() called");
+				$.ajax({
+					url:'./suppliers',
+					type:'post',
+					data:{
+						"action":"delete",
+						"supplierId":selectedRow
+					},
+					success:function(results){
+						console.log("Supplier_delete() successed");
+						console.log(results.state);
+						console.log(results.errors);
+						Supplier_getAll();
+					}
+				});
+			}
+
+		/*search*/
+			$('#Supplier .searchBlock .dropdown').dropdown();
+			$('#Supplier .searchBlock .button').click(function(){
+				var keyword = $('#Supplier .searchBlock input').val();
+				var by = $('#Supplier .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("selectByTel"===by){
+					$.ajax({
+						url:'./suppliers',
+						type:'get',
+						data:{
+							"action":"selectByTel",
+							"supplierTel":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by selectByTel successed");
+							console.log(datas);
+							Supplier_show(datas);
+						}
+					});
+				} else if("selectByName"===by){
+					$.ajax({
+						url:'./suppliers',
+						type:'get',
+						data:{
+							"action":"selectByName",
+							"supplierName":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by selectByName successed");
+							console.log(datas);
+							Supplier_show(datas);
+						}
+					});
+				}
+			});
+
+		/*Supplier modal initializing*/
+			/*notice! modal elements MUST assign an ID*/
+
+			$('#Supplier_modal .approve.button').click(function(){
+				$('#Supplier_modal .approve.button').addClass('disabled');
+				$('#Supplier_modal .approve.button').addClass('loading');
+			});
+
+			$('#Supplier_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Supplier_modal .form').form('validate form');
+					return false;
+				}
+			});
+
+			$('#Supplier_modal .btnFormCancel').click(function(){
+				$('#Supplier_modal .form').form('set values', {
+					supplierId:"",
+					supplierName:"",
+					supplierTax:"",
+					supplierContact:"",
+					supplierTel:"",
+					supplierAddr:"",
+					supplierAcct:"",
+					supplierDate:"",
+					supplierNote:""
+				});
+				$('#Supplier_modal').modal("hide");
+			});
+
+		/*functions*/
+
+			function Supplier_getAll(){
+				console.log("Supplier_getAll() called");
+
+				$('#Supplier').addClass('loading');/*loading start*/
+				$('#Supplier .btnRefresh').addClass('loading');
+				$('#Supplier .searchBlock .button').addClass('loading');
+
+				$.ajax({
+					url:'./suppliers',
+					type:'get',
+					data:{
+						"action":"selectAll",
+					},
+					dataType:"json",
+					success:function(all){
+						console.log("Supplier_getAll() successed");
+						Supplier_show(all);
+					}
+				});
+			}
+
+			function Supplier_show(all){
+				console.log("Supplier_show() called");
+
+				$('#Supplier').addClass('loading');/*loading start*/
+				$('#Supplier .btnRefresh').addClass('loading');
+				$('#Supplier .searchBlock .button').addClass('loading');
+
+				console.log(all);
+				$('#Supplier .table > tbody').empty();
+				$.each(all.results,function(i,one){
+					var index = i+1;
+					var row = {Title:"Edit an exist Supplier.",
+						supplierId:one.supplierId,
+						supplierName:one.supplierName,
+						supplierTax:one.supplierTax,
+						supplierContact:one.supplierContact,
+						supplierTel:one.supplierTel,
+						supplierAddr:one.supplierAddr,
+						supplierAcct:one.supplierAcct,
+						supplierDate:one.supplierDate,
+						supplierNote:one.supplierNote,
+						task:"update"
+					};
+
+					console.log($('#Supplier .table > tbody tr:nth-child('+index+')'));
+
+					$('<tr>').appendTo($('#Supplier .table > tbody'));
+
+					$('<td>',{html:"<input type='checkbox'>"})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierId})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierName})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierContact})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierTel})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierAcct})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.supplierNote})
+						.addClass("addCursor")
+						.click(function(){Supplier_update(row);})
+						.appendTo($('#Supplier .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Supplier').removeClass('loading');/*loading end*/
+				$('#Supplier .btnRefresh').removeClass('loading');
+				$('#Supplier .searchBlock .button').removeClass('loading');
+			}
+
+			function Supplier_update(row){
+				console.log("Supplier_update() called");
+				Supplier_showModal(row);
+			}
+
+			function Supplier_showModal(row){
+				console.log("Supplier_showModal() called");
+				$('#Supplier_modal .approve.button').removeClass('disabled');
+				$('#Supplier_modal .approve.button').removeClass('loading');
+
+				if("insert"===row.task){
+					$('supplierIdField').addClass('disabled');
+					$('supplierIdField input').addClass('disabled');
+				}else if("update"===row.task){
+					$('supplierIdField').removeClass('disabled');
+					$('supplierIdField input').removeClass('disabled');
+				}
+
+				$('#Supplier_modal .sub.header').html(row.Title);
+				$('#Supplier_modal .form input[name="supplierId"]').val(row.supplierId);
+				$('#Supplier_modal .form input[name="supplierName"]').val(row.supplierName);
+				$('#Supplier_modal .form input[name="supplierTax"]').val(row.supplierTax);
+				$('#Supplier_modal .form input[name="supplierContact"]').val(row.supplierContact);
+				$('#Supplier_modal .form input[name="supplierTel"]').val(row.supplierTel);
+				$('#Supplier_modal .form input[name="supplierAddr"]').val(row.supplierAddr);
+				$('#Supplier_modal .form input[name="supplierAcct"]').val(row.supplierAcct);
+				$('#Supplier_modal .form input[name="supplierDate"]').val(row.supplierDate);
+				$('#Supplier_modal .form textarea[name="supplierNote"]').val(row.supplierNote);
+				$('#Supplier_modal .form input[name="task"]').val(row.task);
+
+				$('#Supplier_modal').modal("show");
+			}
+
+		/*form element initializing*/
+			/*$('#Supplier_modal .form input[name="supplierDate"]').datepicker();
+			$('#Supplier_modal .form input[name="supplierDate"]').datepicker("option","dateFormat","yy/mm/dd");*/
+
+		/*form validation setting*/
+			$('#Supplier_modal .form').form({
+				inline:true,
+				fields:{
+					supplierName: {
+						identifier: 'supplierName',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入公司名稱'
+						}
+						]
+					},
+					supplierContact: {
+						identifier: 'supplierContact',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入聯絡人姓名'
+						}
+						]
+					},
+					supplierTel: {
+						identifier: 'supplierTel',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入電話'
+						},
+						{
+							type   : 'regExp[/\\+?\\d{1,4}-?(\\d{4,15})(#\\d{1,5}){0,1}/]',
+							prompt : '輸入資料錯誤，電話號碼不能有中文或英文，如:02-27450475#123'
+
+						}
+						]
+					},
+					supplierAddr: {
+						identifier: 'supplierAddr',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入地址'
+						}
+						]
+					},
+					supplierDate: {
+						identifier: 'supplierDate',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入首次交易日'
+						},
+						{
+							type   : 'regExp[/^((19|20|21)?[0-9]{2}[- .](0?[1-9]|1[012])[- .](0?[1-9]|[12][0-9]|3[01]))*$/]',
+							prompt : '日期格式必須如範例:2015-01-01 (西元年4碼-月2碼-日2碼)'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Supplier_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.task);
+					console.log(valuesToSubmit.supplierId);
+
+					$.ajax({
+						url:'./suppliers',
+						type:'post',
+						data:{
+							"action":valuesToSubmit.task,
+							"supplierId":valuesToSubmit.supplierId,
+							"supplierName":valuesToSubmit.supplierName,
+							"supplierTax":valuesToSubmit.supplierTax,
+							"supplierContact":valuesToSubmit.supplierContact,
+							"supplierTel":valuesToSubmit.supplierTel,
+							"supplierAddr":valuesToSubmit.supplierAddr,
+							"supplierAcct":valuesToSubmit.supplierAcct,
+							"supplierDate":valuesToSubmit.supplierDate,
+							"supplierNote":valuesToSubmit.supplierNote
+						},
+						success:function(results){
+							console.log("Supplier_modal .form ajax successed");
+							$('#Supplier_modal').modal("hide");
+							console.log(results.state);
+							console.log(results.errors);
+							Supplier_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#Supplier_modal .approve.button').removeClass('disabled');
+					$('#Supplier_modal .approve.button').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#Supplier table .checkboxControl').change(function(){
+				console.log("#Supplier table .checkboxControl changed");
+				var isChecked = $('#Supplier table .checkboxControl').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Supplier .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Supplier .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*Supplier*/
+
+	/*Customer*/
+		/*tab behaviour*/
+			$('#tab-name2').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					Customer_getAll();
+				}
+			});
+
+		/*refresh*/
+			$('#Customer .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				Customer_getAll();
+			});
+
+			function Customer_getAll(){
+				console.log("Customer_getAll() called");
+
+				$('#Customer').addClass('loading');/*loading start*/
+				$('#Customer .btnRefresh').addClass('loading');
+				$('#Customer .searchBlock .button').addClass('loading');
+
+				$.ajax({
+					url:'./customers',
+					type:'get',
+					data:{
+						"action":"customerTel",
+						"customerTel":""
+					},
+					dataType:"json",
+					success:function(all){
+						console.log("Customer_getAll() successed");
+						Customer_show(all);
+					}
+				});
+			}
+
+			function Customer_show(all){
+				console.log("Customer_show() called");
+
+				$('#Customer').addClass('loading');/*loading start*/
+				$('#Customer .btnRefresh').addClass('loading');
+				$('#Customer .searchBlock .button').addClass('loading');
+
+				console.log(all);
+				$('#Customer .table > tbody').empty();
+				$.each(all.results,function(i,one){
+					var index = i+1;
+					var row = {Title:"Edit an exist Customer.",
+						customerName:one.customerName,
+						customerTel:one.customerTel,
+						customerLine:one.customerLine,
+						customerFb:one.customerFb,
+						customerMail:one.customerMail,
+						customerAddr:one.customerAddr,
+						customerNote:one.customerNote,
+						task:"update"
+					};
+
+					console.log($('#Customer .table > tbody tr:nth-child('+index+')'));
+
+					$('<tr>').appendTo($('#Customer .table > tbody'));
+
+					$('<td>',{html:"<input type='checkbox'>"})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerName})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerTel})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerLine})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerFb})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerMail})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerAddr})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerNote})
+						.addClass("addCursor")
+						.click(function(){Customer_update(row);})
+						.appendTo($('#Customer .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Customer').removeClass('loading');/*loading end*/
+				$('#Customer .btnRefresh').removeClass('loading');
+				$('#Customer .searchBlock .button').removeClass('loading');
+			}
+
+		/*insert*/
+			$('#Customer .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				Customer_insert();
+			});
+
+			function Customer_insert(){
+				console.log("Customer_insert() called");
+				var row = {Title:"Add a new Customer.",
+					customerName:"",
+					customerTel:"",
+					customerLine:"",
+					customerFb:"",
+					customerMail:"",
+					customerAddr:"",
+					customerNote:"",
+					task:"insert"
+				};
+				Customer_showModal(row);
+			}
+
+		/*customerTel test*/
+			$('#Customer_modal .form input[name="customerTel"]').blur(function(){
+				if("insert"===$('#Customer_modal .form input[name="task"]').val()){
+					$('#customerTelField .icon.input').addClass("loading");
+					$('#customerTelField i').removeClass("red");
+					$('#customerTelField i').removeClass("remove");
+					$('#customerTelField i').addClass("search");
+					$('#customerTelField i').show();
+					$.ajax({
+					url:'./customers',
+					type:'get',
+					data:{
+						"action":"customerTel",
+						"customerTel":""
+					},
+					dataType:"json",
+					success:function(all){
+						console.log("Customer_getAll() successed");
+						var tel = $('#Customer_modal .form input[name="customerTel"]').val();
+						var telExists = false;
+						$.each(all.results,function(i,one){
+							if(tel==one.customerTel){
+								telExists = true;
+								return;
+							}
+						});
+						if(telExists===true){
+							console.log('customerTelTest fail');
+							$('#Customer_modal .form input[name="customerTelTest"]').val("fail");
+							$('#customerTelField .icon.input').removeClass("loading");
+							$('#customerTelField i').removeClass("search");
+							$('#customerTelField i').addClass("red");
+							$('#customerTelField i').addClass("remove");
+							/*說明寫在這*/
+						}else{
+							console.log('customerTelTest success');
+							$('#Customer_modal .form input[name="customerTelTest"]').val("success");
+							$('#customerTelField .icon.input').removeClass("loading");
+							$('#customerTelField i').removeClass("search");
+						}
+					}
+				});
+				}
+			})
+
+			function Customer_update(row){
+				console.log("Customer_update() called");
+				Customer_showModal(row);
+			}
+
+		/*delete*/
+			$('#Customer .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				Customer_getSelectedToDelete();
+			});
+
+			function Customer_getSelectedToDelete(){
+				console.log("Customer_getSelectedToDelete() called");
+				var checkboxes = $('#Customer .table > tbody > tr td:first-child > input');
+				$.each(checkboxes,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Customer .table > tbody tr:nth-child('+(i+1)+') td:nth-child(3)').text());
+						var selectedRow = $('#Customer .table > tbody tr:nth-child('+(i+1)+') td:nth-child(3)').text();
+						console.log(selectedRow);
+						Customer_delete(selectedRow);
+					}
+				})
+			}
+
+			function Customer_delete(selectedRow){
+				console.log("Customer_delete() called");
+				$.ajax({
+					url:'./customers',
+					type:'post',
+					data:{
+						"action":"delete",
+						"customerTel":selectedRow
+					},
+					success:function(results){
+						console.log("Customer_delete() successed");
+						console.log(results.state);
+						console.log(results.errors);
+						Customer_getAll();
+					}
+				});
+			}
+
+		/*search*/
+			$('#Customer .searchBlock .dropdown').dropdown();
+			$('#Customer .searchBlock .button').click(function(){
+				var keyword = $('#Customer .searchBlock input').val();
+				var by = $('#Customer .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("customerTel"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerTel",
+							"customerTel":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerTel successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				} else if("customerName"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerName",
+							"customerName":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerName successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				} else if("customerLine"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerLine",
+							"customerLine":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerLine successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				} else if("customerFb"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerFb",
+							"customerFb":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerFb successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				} else if("customerMail"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerMail",
+							"customerMail":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerMail successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				} else if("customerNote"===by){
+					$.ajax({
+						url:'./customers',
+						type:'get',
+						data:{
+							"action":"customerNote",
+							"customerNote":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerNote successed");
+							console.log(datas);
+							Customer_show(datas);
+						}
+					});
+				}
+			});
+
+		/*Modal initializing*/
+			/*notice! modal elements MUST assign an ID*/
+			$('#Customer_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Customer_modal .form').form('validate form');
+					return false;
+				}
+			});
+			$('#Customer_modal .approve.button').click(function(){
+				$('#Customer_modal .approve.button').addClass('disabled');
+				$('#Customer_modal .approve.button').addClass('loading');
+			});
+
+			$('#Customer_modal .btnFormCancel').click(function(){
+				$('#Customer_modal .form').form('set values', {
+					customerName:"",
+					customerTel:"",
+					customerLine:"",
+					customerFb:"",
+					customerMail:"",
+					customerAddr:"",
+					customerNote:""
+				});
+				$('#Customer_modal').modal("hide");
+			});
+
+			function Customer_showModal(row){
+				console.log("Customer_showModal() called");
+				$('#Customer_modal .approve.button').removeClass('disabled');
+				$('#Customer_modal .approve.button').removeClass('loading');
+
+				if("update"===row.task){
+					$('#customerTelField input').prop("readonly",true);
+				} else if("insert"===row.task){
+					$('#customerTelField input').prop("readonly",false);
+				}
+
+				$('#Customer_modal .sub.header').html(row.Title);
+				$('#Customer_modal .form input[name="customerName"]').val(row.customerName);
+				$('#Customer_modal .form input[name="customerTel"]').val(row.customerTel);
+				$('#Customer_modal .form input[name="customerLine"]').val(row.customerLine);
+				$('#Customer_modal .form input[name="customerFb"]').val(row.customerFb);
+				$('#Customer_modal .form input[name="customerMail"]').val(row.customerMail);
+				$('#Customer_modal .form input[name="customerAddr"]').val(row.customerAddr);
+				$('#Customer_modal .form textarea[name="customerNote"]').val(row.customerNote);
+				$('#Customer_modal .form input[name="task"]').val(row.task);
+
+				$('#Customer_modal').modal("show");
+			}
+
+		/*form validation setting*/
+			$('#Customer_modal .form').form({
+				inline:true,
+				fields: {
+					customerName: {
+						identifier: 'customerName',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入姓名'
+						}
+						]
+					},
+					customerTel: {
+						identifier: 'customerTel',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入電話'
+						},
+						{
+							type   : 'regExp[/\\+?\\d{1,4}-?(\\d{4,15})(#\\d{1,5}){0,1}/]',
+							prompt : '電話號碼格式錯誤,必須為數字'
+						}
+						]
+					},
+					customerAddr: {
+						identifier: 'customerAddr',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入地址'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Customer_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.task);
+					console.log(valuesToSubmit.customerTel);
+
+					/*customerTel test*/
+					if("insert"===valuesToSubmit.task&&"fail"===valuesToSubmit.customerTelTest){
+						console.log("can't do ajax because customerTel Exists");
+						return;
+					}
+
+					$.ajax({
+						url:'./customers',
+						type:'post',
+						data:{
+							"action":valuesToSubmit.task,
+							"customerName":valuesToSubmit.customerName,
+							"customerTel":valuesToSubmit.customerTel,
+							"customerLine":valuesToSubmit.customerLine,
+							"customerFb":valuesToSubmit.customerFb,
+							"customerMail":valuesToSubmit.customerMail,
+							"customerAddr":valuesToSubmit.customerAddr,
+							"customerNote":valuesToSubmit.customerNote
+						},
+						success:function(results){
+							console.log("Customer_modal .form ajax successed");
+							$('#Customer_modal').modal("hide");
+							console.log(results.state);
+							console.log(results.errors);
+							Customer_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					console.log("123");
+					console.log($('#Customer_modal .approve.button'));
+					$('#Customer_modal .approve.button').removeClass('disabled');
+					$('#Customer_modal .approve.button').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#Customer table .checkboxControl').change(function(){
+				console.log("#Customer table .checkboxControl changed");
+				var isChecked = $('#Customer table .checkboxControl').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Customer .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Customer .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*Customer*/
+
+	/*Product*/
+		/*tab behaviour*/
+			$('#tab-name1').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					Product_getAll();
+				}
+			});
+
+		/*refresh*/
+			$('#Product .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				Product_getAll();
+			});
+
+			function Product_getAll(){
+				console.log("Product_getAll() called");
+
+				$('#Product').addClass('loading');/*loading start*/
+				$('#Product .btnRefresh').addClass('loading');
+				$('#Product .searchBlock .button').addClass('loading');
+
+				$.ajax({
+					url:'./products',
+					type:'get',
+					data:{
+						"action":"select"
+					},
+					dataType:"json",
+					success:function(all){
+						console.log("Product_getAll() successed");
+						Product_show(all);
+					}
+				});
+			}
+
+			function Product_show(all){
+				console.log("Product_show() called");
+
+				$('#Product').addClass('loading');/*loading start*/
+				$('#Product .btnRefresh').addClass('loading');
+				$('#Product .searchBlock .button').addClass('loading');
+
+				console.log(all);
+				$('#Product .table > tbody').empty();
+				$.each(all.results,function(i,one){
+					var index = i+1;
+					var row = {Title:"Edit an exist Product.",
+						productId:one.productId,
+						productType:one.productType,
+						productName:one.productName,
+						productPrice:one.productPrice,
+						productCost:one.productCost,
+						productQty:one.productQty,
+						productColor:one.productColor,
+						productImgPath:one.productImgPath,
+						productNote:one.productNote,
+						task:"update"
+					};
+
+					console.log($('#Product .table > tbody tr:nth-child('+index+')'));
+
+					$('<tr>').appendTo($('#Product .table > tbody'));
+
+					$('<td>',{html:"<input type='checkbox'>"})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productId})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productType})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productName})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productPrice})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productCost})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productQty})
+						.addClass("addCursor")
+						.click(function(){Product_update(row);})
+						.appendTo($('#Product .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Product').removeClass('loading');/*loading end*/
+				$('#Product .btnRefresh').removeClass('loading');
+				$('#Product .searchBlock .button').removeClass('loading');
+			}
+
+		/*insert*/
+			$('#Product .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				Product_insert();
+			});
+
+			function Product_insert(){
+				console.log("Product_insert() called");
+				var row = {Title:"Add a new Product.",
+					productId:"",
+					productType:"",
+					productName:"",
+					productPrice:"",
+					productCost:"",
+					productQty:"",
+					productColor:"",
+					productImgPath:"",
+					productNote:"",
+					task:"insert"
+				};
+				Product_showModal(row);
+			}
+
+			function Product_update(row){
+				console.log("Product_update() called");
+				Product_showModal(row);
+			}
+
+		/*delete*/
+			$('#Product .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				Product_getSelectedToDelete();
+			});
+
+			function Product_getSelectedToDelete(){
+				console.log("Product_getSelectedToDelete() called");
+				var checkboxes = $('#Product .table > tbody > tr td:first-child > input');
+				$.each(checkboxes,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Product .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text());
+						var selectedRow = $('#Product .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text();
+						console.log(selectedRow);
+						Product_delete(selectedRow);
+					}
+				})
+			}
+
+			function Product_delete(selectedRow){
+				console.log("Product_delete() called");
+				$.ajax({
+					url:'./products',
+					type:'post',
+					data:{
+						"action":"delete",
+						"productId":selectedRow
+					},
+					success:function(results){
+						console.log("Product_delete() successed");
+						console.log(results.state);
+						console.log(results.errors);
+						Product_getAll();
+					}
+				});
+			}
+
+		/*search*/
+			$('#Product .searchBlock .dropdown').dropdown();
+			$('#Product .searchBlock .button').click(function(){
+				var keyword = $('#Product .searchBlock input').val();
+				var by = $('#Product .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("productType"===by){
+					$.ajax({
+						url:'./products',
+						type:'get',
+						data:{
+							"action":"select",
+							"productType":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by productType successed");
+							console.log(datas);
+							Product_show(datas);
+						}
+					});
+				} else if("productName"===by){
+					$.ajax({
+						url:'./products',
+						type:'get',
+						data:{
+							"action":"select",
+							"productName":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by productName successed");
+							console.log(datas);
+							Product_show(datas);
+						}
+					});
+				} else if("productId"===by){
+					$.ajax({
+						url:'./products',
+						type:'get',
+						data:{
+							"action":"selectLikeId",
+							"productId":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by selectLikeId successed");
+							console.log(datas);
+							Product_show(datas);
+						}
+					});
+				}
+			});
+
+
+		/*Modal initializing*/
+			/*notice! modal elements MUST assign an ID*/
+			$('#Product_modal .approve.button').click(function(){
+				$('#Product_modal .approve.button').addClass('disabled');
+				$('#Product_modal .approve.button').addClass('loading');
+			});
+
+			$('#Product_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Product_modal .form').form('validate form');
+					return false;
+				}
+			});
+
+			$('#Product_modal .btnFormCancel').click(function(){
+				$('#Product_modal .form').form('set values', {
+					productId:"",
+					productType:"",
+					productName:"",
+					productPrice:"",
+					productCost:"",
+					productQty:"",
+					productColor:"",
+					productImgPath:"",
+					productNote:""
+				});
+				$('#productTypeField .text').val("");
+				$('#productColorField .text').val("");
+				$('#Product_modal').modal("hide");
+			});
+
+			function Product_showModal(row){
+				console.log("Product_showModal() called");
+
+				$('#Product_modal .form input[name="productColor"]').val("");
+				$('#productColorField .text').val("");
+
+				$('#Product_modal .approve.button').removeClass('disabled');
+				$('#Product_modal .approve.button').removeClass('loading');
+
+				if("update"===row.task){
+					$('#productIdField input').prop("readonly",true);
+					$('#productTypeField input').prop("readonly",true);
+					$('#productCostField input').prop("readonly",true);
+				} else if("insert"===row.task){
+					$('#productIdField input').prop("readonly",false);
+					$('#productTypeField input').prop("readonly",false);
+					$('#productCostField input').prop("readonly",false);
+				}
+
+				$('#Product_modal .sub.header').html(row.Title);
+				$('#Product_modal .form input[name="productId"]').val(row.productId);
+				$('#productTypeField .text').text(row.productType);
+				$('#Product_modal .form input[name="productType"]').val(row.productType);
+				$('#Product_modal .form input[name="productName"]').val(row.productName);
+				$('#Product_modal .form input[name="productPrice"]').val(row.productPrice);
+				$('#Product_modal .form input[name="productCost"]').val(row.productCost);
+				$('#Product_modal .form input[name="productQty"]').val(row.productQty);
+
+				var productColorName="請選擇顏色";
+				if("red"===row.productColor){
+					productColorName="紅";
+				} else if("blue"===row.productColor){
+					productColorName="藍";
+				} else if("dblue"===row.productColor){
+					productColorName="深藍";
+				} else if("black"===row.productColor){
+					productColorName="黑";
+				} else if("purple"===row.productColor){
+					productColorName="紫";
+				} else if("orange"===row.productColor){
+					productColorName="橙";
+				} else if("dorange"===row.productColor){
+					productColorName="深橙";
+				} else if("white"===row.productColor){
+					productColorName="白";
+				} else if("grey"===row.productColor){
+					productColorName="灰";
+				} else if("yellow"===row.productColor){
+					productColorName="黃";
+				} else if("pink"===row.productColor){
+					productColorName="粉";
+				} else if("green"===row.productColor){
+					productColorName="綠";
+				} else{
+					productColorName="";
+				}
+				$('#Product_modal .form input[name="productColor"]').val(row.productColor);
+				$('#productColorField .text').text(productColorName);
+
+				$('#Product_modal .form input[name="productImgPath"]').val(row.productImgPath);
+				$('#Product_modal .form textarea[name="productNote"]').val(row.productNote);
+				$('#Product_modal .form input[name="task"]').val(row.task);
+
+				$('#Product_modal').modal("show");
+			}
+
+		/*form element initializing*/
+			$('#Product_modal .form .selection.dropdown').dropdown();
+
+		/*form validation setting*/
+			$('#Product_modal .form').form({
+				inline:true,
+				fields: {
+					productId: {
+						identifier: 'productId',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入料號'
+						}
+						]
+					},
+					productType: {
+						identifier: 'productType',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入種類'
+						}
+						]
+					},
+					productName: {
+						identifier: 'productName',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入品名'
+						}
+						]
+					},
+					productPrice: {
+						identifier: 'productPrice',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入價格'
+						},
+						{
+							type   : 'number',
+							prompt : '價格必須為數字'
+						}
+						]
+					},
+					productCost: {
+						identifier: 'productCost',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入成本'
+						},
+						{
+							type   : 'number',
+							prompt : '成本必須為數字'
+						}
+						]
+					},
+					productQty: {
+						identifier: 'productQty',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入庫存'
+						},
+						{
+							type   : 'number',
+							prompt : '庫存必須為數字'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Product_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.task);
+					console.log(valuesToSubmit.productId);
+
+					$.ajax({
+						url:'./products',
+						type:'post',
+						data:{
+							"action":valuesToSubmit.task,
+							"productId":valuesToSubmit.productId,
+							"productType":valuesToSubmit.productType,
+							"productColor":valuesToSubmit.productColor,
+							"productImgPath":valuesToSubmit.productImgPath,
+							"productName":valuesToSubmit.productName,
+							"productPrice":valuesToSubmit.productPrice,
+							"productCost":valuesToSubmit.productCost,
+							"productQty":valuesToSubmit.productQty,
+							"productNote":valuesToSubmit.productNote
+						},
+						success:function(results){
+							console.log("Product_modal .form ajax successed");
+							$('#Product_modal').modal("hide");
+							console.log(results.state);
+							console.log(results.errors);
+							Product_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#Product_modal .approve.button').removeClass('disabled');
+					$('#Product_modal .approve.button').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#Product table .checkboxControl').change(function(){
+				console.log("#Product table .checkboxControl changed");
+				var isChecked = $('#Product table .checkboxControl').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Product .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Product .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*product*/
+
+	/*Purchase*/
+		/*tab behaviour*/
+			$('#tab-name6').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					Purchase_getAll();
+				}
+			});
+
+		/*refresh*/
+			$('#Purchase .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				Purchase_getAll();
+			});
+
+			function Purchase_getAll(){
+				console.log("Purchase_getAll() called");
+
+				$('#Purchase').addClass('loading');/*loading start*/
+				$('#Purchase .btnRefresh').addClass('loading');
+				$('#Purchase .searchBlock .button').addClass('loading');
+
+				$.ajax({
+					url:'./purchase',
+					type:'get',
+					data:{
+						"task":"all"
+					},
+					dataType:"json",
+					success:function(all){
+						console.log("Purchase_getAll() successed");
+						Purchase_show(all);
+					}
+				});
+			}
+
+			function Purchase_show(all){
+				console.log("Purchase_show() called");
+
+				$('#Purchase').addClass('loading');/*loading start*/
+				$('#Purchase .btnRefresh').addClass('loading');
+				$('#Purchase .searchBlock .button').addClass('loading');
+
+				console.log(all);
+				$('#Purchase .table > tbody').empty();
+				$.each(all.results,function(i,one){
+					var index = i+1;
+
+					var row = {Title:"PurchaseRecord Details.",
+						recordNo:one.recordNo,
+						date:one.date,
+						purchaseType:one.purchaseType,
+						productId:one.productId,
+						number:one.number,
+						prize:one.prize,
+						notes:one.notes,
+						task:""
+					};
+
+					console.log($('#Purchase .table > tbody tr:nth-child('+index+')'));
+
+					$('<tr>').appendTo($('#Purchase .table > tbody'));
+
+					$('<td>',{html:one.recordNo})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.date})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.purchaseType})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.productId})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.number})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.prize})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.notes})
+						.addClass("addCursor")
+						.click(function(){Purchase_detail(row);})
+						.appendTo($('#Purchase .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Purchase').removeClass('loading');/*loading end*/
+				$('#Purchase .btnRefresh').removeClass('loading');
+				$('#Purchase .searchBlock .button').removeClass('loading');
+			}
+
+		/*insert*/
+			$('#Purchase .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				Purchase_insert();
+			});
+
+			function Purchase_insert(){
+				console.log("Purchase_insert() called");
+				var row = {Title:"Add a new PurchaseRecord.",
+					recordNo:"",
+					date:"",
+					purchaseType:"",
+					productId:"",
+					number:"",
+					prize:"",
+					notes:"",
+					task:"insert"
+				};
+				Purchase_showModal(row);
+			}
+
+			function Purchase_detail(row){
+				console.log("Purchase_detail() called");
+				row.task="detail";
+				Purchase_showModal(row);
+			}
+
+		/*search*/
+			$('#Purchase .searchBlock .dropdown').dropdown();
+			/*<option selected="selected" value="type">紀錄種類</option>
+			<option value="date">日期</option>
+			<option value="productid">料號</option>
+			<option value="supplierid">供應商名稱</option>*/
+			$('#Purchase .searchBlock .button').click(function(){
+				var keyword = $('#Purchase .searchBlock input').val();
+				var by = $('#Purchase .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("type"===by){
+					$.ajax({
+						url:'./purchase',
+						type:'get',
+						data:{
+							"task":"type",
+							"keyword":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by type successed");
+							console.log(datas);
+							Purchase_show(datas);
+						}
+					});
+				} else if("date"===by){
+					$.ajax({
+						url:'./purchase',
+						type:'get',
+						data:{
+							"task":"date",
+							"keyword":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by date successed");
+							console.log(datas);
+							Purchase_show(datas);
+						}
+					});
+				} else if("productid"===by){
+					$.ajax({
+						url:'./purchase',
+						type:'get',
+						data:{
+							"task":"productid",
+							"keyword":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by productid successed");
+							console.log(datas);
+							Purchase_show(datas);
+						}
+					});
+				}
+			});
+
+		/*Modal initializing*/
+			/*notice! modal elements MUST assign an ID*/
+
+			$('#Purchase_modal .approve.button').click(function(){
+				$('#Purchase_modal .approve.button').addClass('disabled');
+				$('#Purchase_modal .approve.button').addClass('loading');
+			});
+
+			$('#Purchase_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Purchase_modal .form').form('validate form');
+					return false;
+				}
+			});
+
+			$('#Purchase_modal .btnFormCancel').click(function(){
+				$('#Purchase_modal .form').form('set values', {
+					recordNo:"",
+					date:"",
+					purchaseType:"",
+					productId:"",
+					number:"",
+					prize:"",
+					notes:""
+				});
+				$('#Purchase_modal').modal("hide");
+			});
+
+			function Purchase_showModal(row){
+				console.log("Purchase_showModal() called");
+
+				$('#Purchase_modal .approve.button').removeClass('disabled');
+				$('#Purchase_modal .approve.button').removeClass('loading');
+
+				if("insert"===row.task){
+					$('#Purchase_modal .approve').removeClass("disabled");
+					$('#Purchase_modal .purchaseTypeField .dropdown').removeClass("disabled");
+					$('#Purchase_modal .form input[name="prize"]').prop('readonly',false);
+					$('#Purchase_modal .form input[name="productId"]').prop('readonly',false);
+					$('#Purchase_modal .form input[name="number"]').prop('readonly',false);
+					$('#Purchase_modal .form input[name="prize"]').prop('readonly',false);
+					$('#Purchase_modal .form textarea[name="notes"]').prop('readonly',false);
+				}else if("detail"===row.task){
+					$('#Purchase_modal .approve').addClass("disabled");
+					$('#Purchase_modal .purchaseTypeField .dropdown').addClass("disabled");
+					$('#Purchase_modal .form input[name="prize"]').prop('readonly',true);
+					$('#Purchase_modal .form input[name="productId"]').prop('readonly',true);
+					$('#Purchase_modal .form input[name="number"]').prop('readonly',true);
+					$('#Purchase_modal .form input[name="prize"]').prop('readonly',true);
+					$('#Purchase_modal .form textarea[name="notes"]').prop('readonly',true);
+				}
+
+				$('#Purchase_modal .sub.header').html(row.Title);
+				$('#Purchase_modal .form input[name="recordNo"]').val(row.recordNo);
+				$('#Purchase_modal .form input[name="date"]').val(row.date);
+				$('#Purchase_modal .form input[name="purchaseType"]').val(row.purchaseType);
+				$('#Purchase_modal .form input[name="productId"]').val(row.productId);
+				$('#Purchase_modal .form input[name="number"]').val(row.number);
+				$('#Purchase_modal .form input[name="prize"]').val(row.prize);
+				$('#Purchase_modal .form textarea[name="notes"]').val(row.notes);
+
+				$('#Purchase_modal').modal("show");
+			}
+
+		/*form element initializing*/
+			$('#Purchase_productId').search({
+				apiSettings: {
+					url:'./products?action=selectLikeId&productId={query}'
+				},
+				fields: {
+					title:'productId',
+					description:'productName'
+				},
+				minCharacters : 0
+			});
+			/*search 暫時使用，要改server端 用id模糊搜尋 可料號跟名稱都顯示*/
+
+			/*$('#Purchase_productId').dropdown({
+				apiSettings: {
+					url:'./products?action=select',
+					onResponse : function(products) {
+						var response = {
+							results : {}
+						};
+						$.each(products.results,function(i,product){
+							var productId=product.productId;
+							response.results.push({
+								"name":product.productId,
+								"value":product.productId
+							});
+						});
+					}
+				}
+			}); */
+			/*search selection dropdown+API 查全部 有scroll bar 要改server端回傳 name及value 只會顯示料號*/
+
+			$('#Purchase_modal .dropdown').dropdown({
+				onChange:function(value){
+					if("進貨"===value||"退貨"===value){
+						$('#Purchase_modal .form input[name="prize"]').prop('disabled',false);
+					} else{
+						$('#Purchase_modal .form input[name="prize"]').prop('disabled',true);
+					}
+				}
+			});
+
+		/*form validation setting*/
+			$('#Purchase_modal .form').form({
+				inline:true,
+				fields: {
+					productId: {
+						identifier: 'productId',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '料號不可空白'
+						}
+						]
+					},
+					purchaseType: {
+						identifier: 'purchaseType',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請選擇種類'
+						}
+						]
+					},
+					number: {
+						identifier: 'number',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '數量不可空白'
+						},
+						{
+							type   : 'number',
+							prompt : '數量必須為數字'
+						}
+						]
+					},
+					prize: {
+						identifier: 'prize',
+						optional:true,
+						rules: [
+						{
+							type   : 'number',
+							prompt : '進價必須為數字'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Purchase_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.purchaseType);
+					console.log(valuesToSubmit.recordNo);
+					$.ajax({
+						url:'./purchase',
+						type:'post',
+						data:{
+							"purchaseType":valuesToSubmit.purchaseType,
+							"notes":valuesToSubmit.notes,
+							"productId":valuesToSubmit.productId,
+							"number":valuesToSubmit.number,
+							"prize":valuesToSubmit.prize,
+						},
+						success:function(results){
+							console.log("Purchase_modal .form ajax successed");
+							$('#Purchase_modal').modal("hide");
+							console.log(results.state);
+							console.log(results.errors);
+							Purchase_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#Purchase_modal .approve.button').removeClass('disabled');
+					$('#Purchase_modal .approve.button').removeClass('loading');
+				}
+			});
+	/*Purchase*/
+
+	/*Order*/
+		/*tab behaviour*/
+			$('#tab-name4').tab({
+				evaluateScripts:true,
+				alwaysRefresh:true,
+				cache:false,
+				onLoad:function(){
+					Order_getAll();
+				}
+			});
+
+		/*refresh*/
+			$('#Order .btnRefresh').click(function(){
+				console.log("btnRefresh clicked");
+				Order_getAll();
+			});
+
+			function Order_getAll(){
+				$('#Order').addClass('loading');/*loading start*/
+				$('#Order .btnRefresh').addClass('loading');
+				$('#Order .searchBlock .button').addClass('loading');
+				console.log("Order_getAll() called");
+				$.ajax({
+					url:'./OrderCommand',
+					type:'get',
+					data:{
+						"task":"all"
+					},
+					dataType:"json",
+					success:function(allOrder){
+						console.log("allOrder get");
+						Order_addCustomerIntoOrder(allOrder);
+					}
+				});
+			}
+
+			function Order_addCustomerIntoOrder(Orders){
+				console.log("Order_addCustomerIntoOrder() called");
+				/*此函數作用
+					傳入訂單資料(Orders)
+					用其中每一筆訂單資料(Orders.results[i])的custmerTel去顧客table中查出該顧客資料(oneCustomer)
+					把顧客資料跟訂單資料合併
+					所以最後拿到的是
+					all物件，其下有results屬性，屬性值為陣列，陣列中是很多筆資料，每筆資料都包含單筆訂單及其顧客資料*/
+
+				/*先用一個新的物件存，此物件代表最後含有顧客資料的物件*/
+				var all=Orders;
+
+				/*準備迴圈*/
+				var i=0;	/*counter*/
+				getNext();
+				function getNext(){
+					if(i<all.results.length){
+						var customerTel = all.results[i].customerTel;	/*拿order表格裡面的customerTel去查customer表格裡面的單筆*/
+						/*執行ajax*/
+						$.ajax({
+							url:'./customers',
+							type:'get',
+							data:{
+								"action":"customerTel",
+								"customerTel":customerTel
+							},
+							dataType:"json",
+							success:function(oneCustomer){
+								console.log("success "+i);
+								/*成功後拿到一筆customer資料oneCustomer*/
+								/*開始把顧客資料也塞進all物件裡，與訂單資料同一層級，用key跟val(js物件的屬性與屬性值)的方式*/
+								if(oneCustomer.results.length!=0){
+									all.results[i].customerName=oneCustomer.results[0].customerName;
+									all.results[i].customerLine=oneCustomer.results[0].customerLine;
+									all.results[i].customerFb=oneCustomer.results[0].customerFb;
+									all.results[i].customerMail=oneCustomer.results[0].customerMail;
+									all.results[i].customerNote=oneCustomer.results[0].customerNote;
+									i++;
+									getNext();
+								} else{
+									i++;
+									getNext();
+								}
+								/*內部ajax成功時才能做下一圈*/
+							}
+						});
+					} else{
+						Order_show(all);/*此時all物件裡的資料才是真正要顯示在modal裡的資料*/
+					}
+				}
+			}
+
+			function Order_show(all){
+				$('#Order').addClass('loading');/*loading start*/
+				$('#Order .btnRefresh').addClass('loading');
+				$('#Order .searchBlock .button').addClass('loading');
+
+				console.log("Order_show() called");
+				console.log(all);
+				$('#Order .table > tbody').empty();
+				$.each(all.results,function(i,one){
+					var index = i+1;
+
+					var row = {Title:"Edit an exist Product.",
+						orderNo:one.orderNo,
+						orderDate:one.orderDate,
+						price:one.price,
+						orderState:one.orderState,
+						orderNotes:one.orderNotes,
+						coupon:one.coupon,
+						deliveryDate:one.deliveryDate,
+						bossNotes:one.bossNotes,
+
+						customerName:one.customerName,
+						customerTel:one.customerTel,
+						customerLine:one.customerLine,
+						customerFb:one.customerFb,
+						customerMail:one.customerMail,
+						customerNote:one.customerNote,
+						receiveType:one.receiveType,
+						customerAddr:one.customerAddr,
+						receiveNotes:one.receiveNotes,
+
+						paymentType:one.paymentType,
+						allPayTradeNo:one.allPayTradeNo,
+						paymentTypeChargeFee:one.paymentTypeChargeFee,
+
+						housing:one.housing,
+						rocker:one.rocker,
+						l1:one.l1,
+						l2:one.l2,
+						r1:one.r1,
+						r2:one.r2,
+						o:one.o,
+						x:one.x,
+						square:one.square,
+						triangle:one.triangle,
+						start:one.start,
+						selecter:one.selecter,
+						touch:one.touch,
+						coverImg:one.coverImg,
+						board:one.board,
+
+						task:"update"
+					};
+
+					/*顯示在表格的
+					<th>訂單編號</th>
+					<th>下訂日期</th>
+					<th>顧客名稱</th><!-- 從顧客table查 -->
+					<th>顧客電話</th>
+					<th>成交價格</th>
+					<th>訂單狀態</th>
+					<th>業者備註</th>*/
+
+					console.log($('#Order .table > tbody tr:nth-child('+index+')'));
+
+					$('<tr>').appendTo($('#Order .table > tbody'));
+
+					$('<td>',{html:"<input type='checkbox'>"})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.orderNo})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.orderDate})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerName})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.customerTel})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.price})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.orderState})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+					$('<td>',{html:one.bossNotes})
+						.addClass("addCursor")
+						.click(function(){Order_update(row);})
+						.appendTo($('#Order .table > tbody tr:nth-child('+index+')'));
+				});
+				$('#Order').removeClass('loading');/*loading end*/
+				$('#Order .btnRefresh').removeClass('loading');
+				$('#Order .searchBlock .button').removeClass('loading');
+			}
+
+		/*update*/
+			function Order_update(row){
+				console.log("Order_update() called");
+				if("已下訂(普通)"===row.orderState){
+					$('#Order_modal .form .dropdown .confirmed').hide();
+					$('#Order_modal .form .dropdown .payed').show();
+					$('#Order_modal .form .dropdown .send').hide();
+				} else if("已下訂(特殊)"===row.orderState){
+					$('#Order_modal .form .dropdown .confirmed').show();
+					$('#Order_modal .form .dropdown .payed').hide();
+					$('#Order_modal .form .dropdown .send').hide();
+				} else if("已確認"===row.orderState){
+					$('#Order_modal .form .dropdown .confirmed').hide();
+					$('#Order_modal .form .dropdown .payed').show();
+					$('#Order_modal .form .dropdown .send').hide();
+				} else if("已結帳"===row.orderState){
+					$('#Order_modal .form .dropdown .confirmed').hide();
+					$('#Order_modal .form .dropdown .payed').hide();
+					$('#Order_modal .form .dropdown .send').show();
+				} else if("已出貨"===row.orderState){
+					/*結掉這筆訂單*/
+				}
+
+				Order_showModal(row);
+			}
+
+		/*delete*/
+			$('#Order .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				Order_getSelectedToDelete();
+			});
+
+			function Order_getSelectedToDelete(){
+				console.log("Order_getSelectedToDelete() called");
+				var checkboxes = $('#Order .table > tbody > tr td:first-child > input');
+				$.each(checkboxes,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Order .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text());
+						var selectedRow = $('#Order .table > tbody tr:nth-child('+(i+1)+') td:nth-child(2)').text();
+						console.log(selectedRow);
+						Order_delete(selectedRow);
+					}
+				})
+			}
+
+			/*/OrderCommand?task=delete&orderNo=*/
+			function Order_delete(selectedRow){
+				console.log("Order_delete() called");
+				$.ajax({
+					url:'./OrderCommand',
+					type:'post',
+					data:{
+						"task":"delete",
+						"orderNo":selectedRow
+					},
+					success:function(results){
+						console.log("Order_delete() successed");
+						console.log(results);
+						Order_getAll();
+					}
+				});
+			}
+
+		/*search*/
+			$('#Order .searchBlock .dropdown').dropdown();
+			$('#Order .searchBlock .button').click(function(){
+				var keyword = $('#Order .searchBlock input').val();
+				var by = $('#Order .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("tel"===by){
+					$.ajax({
+						url:'./OrderCommand',
+						type:'get',
+						data:{
+							"task":"tel",
+							"customerTel":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by customerTel successed");
+							console.log(datas);
+							Order_addCustomerIntoOrder(datas);
+						}
+					});
+				} else if("date"===by){
+					$.ajax({
+						url:'./OrderCommand',
+						type:'get',
+						data:{
+							"task":"date",
+							"orderDate":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by orderDate successed");
+							console.log(datas);
+							Order_addCustomerIntoOrder(datas);
+						}
+					});
+				} else if("bossNotes"===by){
+					$.ajax({
+						url:'./OrderCommand',
+						type:'get',
+						data:{
+							"task":"note",
+							"bossNotes":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by bossNotes successed");
+							console.log(datas);
+							Order_addCustomerIntoOrder(datas);
+						}
+					});
+				}
+			});
+
+
+		/*Modal initializing*/
+			$('#Order_modal .approve.button').click(function(){
+				$('#Order_modal .approve.button').addClass('disabled');
+				$('#Order_modal .approve.button').addClass('loading');
+			});
+
+			/*notice! modal elements MUST assign an ID*/
+			$('#Order_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Order_modal .form').form('validate form');
+					return false;
+				}
+			});
+
+			$('#Order_modal .btnFormCancel').click(function(){
+				$('#Order_modal .form').form('set values', {
+					orderNo:"",
+					orderDate:"",
+					price:"",
+					orderState:"",
+					orderNotes:"",
+					coupon:"",
+					deliveryDate:"",
+					bossNotes:"",
+
+					customerName:"",
+					customerTel:"",
+					customerLine:"",
+					customerFb:"",
+					customerMail:"",
+					customerNote:"",
+					receiveType:"",
+					customerAddr:"",
+					receiveNotes:"",
+
+					paymentType:"",
+					allPayTradeNo:"",
+					paymentTypeChargeFee:"",
+
+					housing:"",
+					rocker:"",
+					l1:"",
+					l2:"",
+					r1:"",
+					r2:"",
+					o:"",
+					x:"",
+					square:"",
+					triangle:"",
+					start:"",
+					selecter:"",
+					touch:"",
+					coverImg:"",
+					board:""
+				});
+				$('#Order_modal .orderStateField .text').text("");
+				$('#Order_modal').modal("hide");
+			});
+
+			function Order_showModal(row){
+				console.log("Order_showModal() called");
+
+				$('#Order_modal .approve.button').removeClass('disabled');
+				$('#Order_modal .approve.button').removeClass('loading');
+
+				$('#Order_modal .sub.header').html(row.Title);
+				$('#Order_modal .form input[name="orderNo"]').val(row.orderNo);
+				$('#Order_modal .form input[name="orderDate"]').val(row.orderDate);
+				$('#Order_modal .form input[name="price"]').val(row.price);
+				$('#Order_modal .form input[name="orderState"]').val(row.orderState);
+				console.log($('#Order_modal .orderStateField .text'))
+				$('#Order_modal .orderStateField .text').text(row.orderState);
+				$('#Order_modal .form input[name="coupon"]').val(row.coupon);
+				$('#Order_modal .form input[name="deliveryDate"]').val(row.deliveryDate);
+				$('#Order_modal .form textarea[name="bossNotes"]').val(row.bossNotes);
+
+				$('#Order_modal .form input[name="customerName"]').val(row.customerName);
+				$('#Order_modal .form input[name="customerTel"]').val(row.customerTel);
+				$('#Order_modal .form input[name="customerLine"]').val(row.customerLine);
+				$('#Order_modal .form input[name="customerFb"]').val(row.customerFb);
+				$('#Order_modal .form input[name="customerMail"]').val(row.customerMail);
+				$('#Order_modal .form textarea[name="customerNote"]').val(row.customerNote);
+				$('#Order_modal .form input[name="receiveType"]').val(row.receiveType);
+				$('#Order_modal .form input[name="customerAddr"]').val(row.customerAddr);
+				$('#Order_modal .form textarea[name="receiveNotes"]').val(row.receiveNotes);
+				$('#Order_modal .form textarea[name="orderNotes"]').val(row.orderNotes);
+
+				$('#Order_modal .form input[name="paymentType"]').val(row.paymentType);
+				$('#Order_modal .form input[name="allPayTradeNo"]').val(row.allPayTradeNo);
+				$('#Order_modal .form input[name="paymentTypeChargeFee"]').val(row.paymentTypeChargeFee);
+
+				$('#Order_modal .form input[name="housing"]').val(row.housing);
+				$('#Order_modal .form input[name="rocker"]').val(row.rocker);
+				$('#Order_modal .form input[name="l1"]').val(row.l1);
+				$('#Order_modal .form input[name="l2"]').val(row.l2);
+				$('#Order_modal .form input[name="r1"]').val(row.r1);
+				$('#Order_modal .form input[name="r2"]').val(row.r2);
+				$('#Order_modal .form input[name="o"]').val(row.o);
+				$('#Order_modal .form input[name="x"]').val(row.x);
+				$('#Order_modal .form input[name="square"]').val(row.square);
+				$('#Order_modal .form input[name="triangle"]').val(row.triangle);
+				$('#Order_modal .form input[name="start"]').val(row.start);
+				$('#Order_modal .form input[name="selecter"]').val(row.selecter);
+				$('#Order_modal .form input[name="touch"]').val(row.touch);
+				$('#Order_modal .form input[name="board"]').val(row.board);
+
+				$('#Order_modal .form input[name="task"]').val(row.task);
+
+				$('#Order_modal .form input[name="coverImg"]').val(row.coverImg);
+
+				$('#Order_modal .form .coverImg').attr('src',"");
+
+				$.ajax({
+					url:'./image',
+					type:'get',
+					data:{
+						"action":"selectById",
+						"imageId":row.coverImg
+					},
+					dataType:"json",
+					success:function(data){
+						$('#Order_modal .form .coverImg').attr('src',data.results[0].imagePath);
+					}
+				});
+				$('#Order_modal').modal("show");
+			}
+
+		/*form element initializing*/
+			$('#Order_modal .form .dropdown').dropdown();
+
+		/*form validation setting*/
+			$('#Order_modal .form').form({
+				inline:true,
+				fields: {
+					
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Order_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.task);
+					console.log(valuesToSubmit.orderNo);
+
+					$.ajax({
+						url:'./OrderCommand',
+						type:'post',
+						data:{
+							"task":valuesToSubmit.task,
+							"orderNo":valuesToSubmit.orderNo,
+							"price":valuesToSubmit.price,
+							"orderState":valuesToSubmit.orderState,
+							"deliveryDate":valuesToSubmit.deliveryDate,
+							"bossNotes":valuesToSubmit.bossNotes,
+
+							"housing":valuesToSubmit.housing,
+							"rocker":valuesToSubmit.rocker,
+							"l1":valuesToSubmit.l1,
+							"l2":valuesToSubmit.l2,
+							"r1":valuesToSubmit.r1,
+							"r2":valuesToSubmit.r2,
+							"o":valuesToSubmit.o,
+							"x":valuesToSubmit.x,
+							"square":valuesToSubmit.square,
+							"triangle":valuesToSubmit.triangle,
+							"start":valuesToSubmit.start,
+							"selecter":valuesToSubmit.selecter,
+							"touch":valuesToSubmit.touch,
+							"coverImg":valuesToSubmit.coverImg,
+							"board":valuesToSubmit.board
+						},
+						success:function(results){
+							console.log("Order_modal .form ajax successed");
+							$('#Order_modal').modal("hide");
+							Order_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#Order_modal .approve.button').removeClass('disabled');
+					$('#Order_modal .approve.button').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#Order table .checkboxControl').change(function(){
+				console.log("#Order table .checkboxControl changed");
+				var isChecked = $('#Order table .checkboxControl').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Order .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Order .table > tbody tr td:first-child > input'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*Order*/
+
+	/*Image*/
+		/*tab behaviour*/
+		$('#tab-name7').tab({
+			evaluateScripts:true,
+			alwaysRefresh:true,
+			cache:false,
+			onLoad:function(){
+				Image_getAll();
+			}
+		});
+
+		/*refresh*/
+		$('#Image .btnRefresh').click(function(){
+			console.log("btnRefresh clicked");
+			Image_getAll();
+		});
+
+		function Image_getAll(){
+			$('#Image').addClass('loading');/*loading start*/
+			$('#Image .btnRefresh').addClass('loading');
+			$('#Image .searchBlock .button').addClass('loading');
+			console.log("Image_getAll() called");
+			$.ajax({
+				url:'./image',
+				type:'get',
+				data:{
+					"action":"selectAll"
+				},
+				dataType:"json",
+				success:function(all){
+					console.log("Image_getAll() successed");
+					Image_show(all);
+				}
+			});
+		}
+
+		function Image_show(all){
+			$('#Image').addClass('loading');/*loading start*/
+			$('#Image .btnRefresh').addClass('loading');
+			$('#Image .searchBlock .button').addClass('loading');
+
+			console.log("Image_show() called");
+			console.log(all);
+			$('#Image .cards').empty();
+			$.each(all.results,function(i,one){
+				var index = i+1;
+				var card = {Title:"Edit an exist Image.",
+					imageId:one.imageId,
+					imageName:one.imageName,
+					imageDate:one.imageDate,
+					imagePath:one.imagePath,
+					imgCategoryName:one.imgCategoryName,
+					task:"update"
+				};
+
+
+				/*<div class="ui six stackable cards">
+					<div class="ui card">
+						<div class="image">
+							<div class="ui ribbon label"><input type="checkbox"></div>
+							<img src="images/profile/Model 5th-0531.jpg">
+						</div>
+						<div class="content">
+							<a class="header">Profile01</a>
+							<div class="meta">
+								<span class="date">2015/10/1</span>
+							</div>
+						</div>
+					</div>
+				</div>*/
+
+				$('<div />',{
+					'class':'ui blue card',
+					html:'<div class="image"><div class="ui ribbon label"><input type="checkbox"></div><img src='+one.imagePath+'></div><div class="content"><div class="imgId" style="display:none">'+one.imageId+'</div><a class="ui description">'+one.imageName+'</a><div class="meta"><span class="date">'+one.imgCategoryName+'</span></div></div>'
+				})
+				.addClass("addCursor")
+				.appendTo($('#Image .cards'));
+
+				/*$('<div />',{
+					'class':'ui ribbon label',
+					html:'<input type="checkbox">'
+				}).appendTo($('#Image .cards .card:nth-child('+index+') > .image'));*/
+
+				$('#Image .cards .card:nth-child('+index+') > .content').click(function(){Image_update(card);});
+
+			});
+
+			$('#Image').removeClass('loading');/*loading complete*/
+			$('#Image .btnRefresh').removeClass('loading');
+			$('#Image .searchBlock .button').removeClass('loading');
+		}
+
+		/*insert*/
+			$('#Image .btnInsert').click(function(){
+				console.log("btnInsert clicked");
+				Image_insert();
+			});
+
+			function Image_insert(){
+				console.log("Image_insert() called");
+				var card = {Title:"Add a new Image.",
+					imageId:"",
+					imageName:"",
+					imageDate:"",
+					imagePath:"",
+					imgCategoryName:"",
+					task:"insert"
+				};
+
+				Image_showModal(card);
+			}
+
+			function Image_update(card){
+				console.log("Image_update() called");
+				Image_showModal(card);
+			}
+
+		/*delete*/
+			$('#Image .btnDelete').click(function(){
+				console.log("btnDelete clicked");
+				Image_getSelectedToDelete();
+			});
+
+			function Image_getSelectedToDelete(){
+				console.log("Image_getSelectedToDelete() called");
+				var checkboxes = $('#Image .cards input');
+				$.each(checkboxes,function(i,checkbox){
+					if($(checkbox).prop('checked')){
+						console.log($(checkbox));
+						console.log($('#Image .cards .card:nth-child('+(i+1)+') .header').text());
+						var selectedCard = $('#Image .cards .card:nth-child('+(i+1)+') .imgId').text();
+						console.log(selectedCard);
+						Image_delete(selectedCard);
+					}
+				})
+			}
+
+			function Image_delete(selectedCard){
+				console.log("Image_delete() called");
+				$.ajax({
+					url:'./image',
+					type:'post',
+					data:{
+						"action":"delete",
+						"imageId":selectedCard
+					},
+					success:function(results){
+						console.log("Image_delete() successed");
+						console.log(results.state);
+						console.log(results.errors);
+						Image_getAll();
+					}
+				});
+			}
+
+		/*search*/
+			$('#Image .searchBlock .dropdown').dropdown();
+			$('#Image .searchBlock .button').click(function(){
+				$('#Image').addClass('loading');/*loading start*/
+				$('#Image .btnRefresh').addClass('loading');
+				var keyword = $('#Image .searchBlock input').val();
+				var by = $('#Image .searchBlock select').val();
+				console.log(keyword);
+				console.log(by);
+				if("selectByImgCategoryName"===by){
+					$.ajax({
+						url:'./image',
+						type:'get',
+						data:{
+							"action":"selectByImgCategoryName",
+							"imgCategoryName":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by selectByImgCategoryName successed");
+							console.log(datas);
+							Image_show(datas);
+						}
+					});
+				} else if("selectByName"===by){
+					$.ajax({
+						url:'./image',
+						type:'get',
+						data:{
+							"action":"selectByName",
+							"imageName":keyword
+						},
+						dataType:"json",
+						success:function(datas){
+							console.log("search by selectByName successed");
+							console.log(datas);
+							Image_show(datas);
+						}
+					});
+				}
+			});
+
+		/*Modal initializing*/
+			/*notice! modal elements MUST assign an ID*/
+			$('#Image_modal .approve.button').click(function(){
+				$('#Image_modal .approve.button').addClass('disabled');
+				$('#Image_modal .approve.button').addClass('loading');
+			});
+
+			$('#Image_modal').modal({
+				allowMultiple: true,
+				debug:false,
+				closable:false,
+				onApprove : function() {
+					$('#Image_modal .form').form('validate form');
+					return false;
+				}
+			});
+
+			$('#Image_modal .btnFormCancel').click(function(){
+				$('#Image_modal .form').form('set values', {
+					imageId:"",
+					imageName:"",
+					imageDate:"",
+					imagePath:"",
+					imgCategoryName:""
+				});
+				$('#Image_modal').modal("hide");
+			});
+
+			$('#Image_modal .form input[name="imagePath"]').blur(function(){
+				$('#Image_modal .imageItem img').attr('src',$('#Image_modal .form input[name="imagePath"]').val());
+			});
+
+			function Image_showModal(card){
+				console.log("Image_showModal() called");
+				$('#Image_modal .form').form('set values', {
+					imageId:"",
+					imageName:"",
+					imageDate:"",
+					imagePath:"",
+					imgCategoryName:""
+				});
+				$('#Image_modal .dropdown .text').text("");
+
+				if("update"===card.task){
+					$('.imageDateField').removeClass('disabled');
+					$('.imageDateField input').removeClass('disabled');
+				} else if("insert"===card.task){
+					$('.imageDateField').addClass('disabled');
+					$('.imageDateField input').addClass('disabled');
+				}
+
+				$('#Image_modal .approve.button').removeClass('disabled');
+				$('#Image_modal .approve.button').removeClass('loading');
+
+				$('#Image_modal .sub.header').html(card.Title);
+				$('#Image_modal .imageItem img').attr('src',card.imagePath);
+				$('#Image_modal .form input[name="imageId"]').val(card.imageId);
+				$('#Image_modal .form input[name="imageName"]').val(card.imageName);
+				$('#Image_modal .form input[name="imageDate"]').val(card.imageDate);
+				$('#Image_modal .form input[name="imagePath"]').val(card.imagePath);
+				$('#Image_modal .form input[name="imgCategoryName"]').val(card.imgCategoryName);
+				$('#Image_modal .form input[name="task"]').val(card.task);
+
+				$('#Image_modal').modal("show");
+			}
+
+		/*form element initializing*/
+			$('#Image_modal .form .selection.dropdown').dropdown();
+
+		/*form validation setting*/
+			$('#Image_modal .form').form({
+				inline:true,
+				fields: {
+					imageName: {
+						identifier: 'imageName',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入名稱'
+						}
+						]
+					},
+					imgCategoryName: {
+						identifier: 'imgCategoryName',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請選擇種類'
+						}
+						]
+					},
+					imagePath: {
+						identifier: 'imagePath',
+						rules: [
+						{
+							type   : 'empty',
+							prompt : '請輸入網址'
+						}
+						]
+					}
+				},
+				onSuccess:function(){
+					console.log("validation successed");
+					console.log("do ajax");
+					var $form = $('#Image_modal .form');
+					var valuesToSubmit = $form.form('get values');
+					console.log(valuesToSubmit.task);
+					console.log(valuesToSubmit.imageId);
+
+					$.ajax({
+						url:'./image',
+						type:'post',
+						data:{
+							"action":valuesToSubmit.task,
+							"imageId":valuesToSubmit.imageId,
+							"imageName":valuesToSubmit.imageName,
+							"imageDate":valuesToSubmit.imageDate,
+							"imagePath":valuesToSubmit.imagePath,
+							"imgCategoryName":valuesToSubmit.imgCategoryName,
+						},
+						success:function(results){
+							console.log("Image_modal .form ajax successed");
+							$('#Image_modal').modal("hide");
+							console.log(results.state);
+							console.log(results.errors);
+							Image_getAll();
+						}
+					});
+				},
+				onFailure:function(){
+					$('#Image_modal .approve.button').removeClass('disabled');
+					$('#Image_modal .approve.button').removeClass('loading');
+				}
+			});
+
+		/*checkbox behaviour*/
+			$('#Image .checkboxControl').change(function(){
+				console.log("#Image .checkboxControl changed");
+				var isChecked = $('#Image .checkboxControl').prop('checked');
+				console.log(isChecked);
+				if(isChecked){
+					$.each($('#Image .cards :checkbox'),function(){
+						$(this).prop("checked",true);
+					});
+				} else{
+					$.each($('#Image .cards :checkbox'),function(){
+						$(this).prop("checked",false);
+					});
+				}
+			});
+	/*Image*/
+
+	/*setting*/
+		$('#tab-name8').tab({
+			evaluateScripts:true,
+			alwaysRefresh:true,
+			cache:false,
+		});
+
+		$('#Setting .form').form({
+			inline:true,
+			fields:{
+				account: {
+					identifier: 'account',
+					rules: [
+					{
+						type   : 'empty',
+						prompt : '請輸入帳號'
+					}
+					]
+				},
+				password: {
+					identifier: 'password',
+					rules: [
+					{
+						type   : 'empty',
+						prompt : '請輸入舊密碼'
+					}
+					]
+				},
+				newPass1: {
+					identifier: 'newPass1',
+					rules: [
+					{
+						type   : 'empty',
+						prompt : '請輸入新密碼'
+					}
+					]
+				},
+				newPass2: {
+					identifier: 'newPass2',
+					rules: [
+					{
+						type   : 'empty',
+						prompt : '請再次輸入新密碼'
+					},
+					{
+						type   : 'match[newPass1]',
+						prompt : '兩次密碼不相同'
+					}
+					]
+				}
+			},
+			onSuccess:function(){
+				console.log("validation successed");
+				var valuesToSubmit = $('#Setting .form').form('get values');
+
+				$.ajax({
+					url:'./accessback',
+					type:'post',
+					data:{
+						"task":'changePass',
+						'account':valuesToSubmit.account,
+						'password':valuesToSubmit.password,
+						'newPass1':valuesToSubmit.newPass1,
+						'newPass2':valuesToSubmit.newPass2
+					},
+					dataType:"json",
+					success:function(data){
+						console.log("changePass .form ajax successed");
+						if("success"===data.state){
+							/*changePass success*/
+							console.log('changePass success');
+							location.replace("./backend_login.jsp");
+						} else if("fail"===data.state){
+							console.log('changePass fail');
+							$('#Setting .form .negative.message').show();
+							return false;
+						}
+					}
+				});
+			}
+		});
+
+		$('#Setting .button').click(function(){
+			$('#Setting .form .negative.message').hide();
+			$('#Setting .form').form('validate form');
+		})
+	/*setting*/
+
+	/*logout*/
+		$('.logoutBlock .button').click(function(){
+			$('.logoutBlock form').form('submit');
+		})
+</script>
+</body>
+</html>
