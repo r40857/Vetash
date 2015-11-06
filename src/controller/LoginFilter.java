@@ -23,7 +23,7 @@ public class LoginFilter implements Filter {
 		if(login!=null && (boolean)login) {
 			req.getRequestDispatcher("/backend_main.html").forward(req, resp);
 		} else {
-			req.getRequestDispatcher("/backend_login.jsp").forward(req, resp);
+			req.getRequestDispatcher("/backend_main.html").forward(req, resp);
 			return;
 		}
 		chain.doFilter(request, response);

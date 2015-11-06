@@ -8,7 +8,7 @@
 <!-- </Context> -->
 
 <Context>
-<Resource url="jdbc:sqlserver://pqh6qqncd1.database.windows.net:1433;database=Vetash" 
+<Resource url="jdbc:sqlserver://zl988lqnro.database.windows.net:1433;database=Vetash" 
     driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" password="Sa123456" username="Vetash@pqh6qqncd1" 
     maxWaitMillis="10000" maxIdle="30" maxTotal="100" type="javax.sql.DataSource" auth="Container" name="jdbc/vetash"/>
 </Context>
