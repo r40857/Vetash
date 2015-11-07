@@ -1195,7 +1195,8 @@
 	$('#mainMenu .item').tab();
 
 	/*Coupons*/
-		/*tab behaviour*/
+	/*折扣碼*/
+		/*tab behaviour*/		
 			$('#tab-name5').tab({
 				evaluateScripts:true,
 				alwaysRefresh:true,
@@ -1256,7 +1257,8 @@
 			});
 
 		/*functions*/
-
+		/*折扣碼functions*/
+			/*折扣碼查詢functions*/
 			function coupon_getAllCoupons(){
 				console.log("coupon_getAllCoupons() called");
 
@@ -1336,7 +1338,7 @@
 					}
 				})
 			}
-
+			/*折扣碼刪除functions*/
 			function coupon_deleteCoupon(couponToDelete){
 				console.log("coupon_deleteCoupon() called");
 				$.ajax({
@@ -1352,7 +1354,7 @@
 					}
 				});
 			}
-
+			/*折扣碼新增functions*/
 			function coupon_insertCoupon(){
 				console.log("coupon_insertCoupon() called");
 				var couponData = {Title:"Add a new Coupon.",
@@ -1363,7 +1365,7 @@
 							Notes:""};
 				coupon_showModal(couponData);
 			}
-
+			/*折扣碼新增functions*/
 			function coupon_updateCoupon(couponData){
 				console.log("coupon_updateCoupon() called");
 				coupon_showModal(couponData);
@@ -1384,6 +1386,7 @@
 
 
 		/*form validation setting*/
+		/*折扣碼驗證*/
 			$('#couponModalForm').form({
 				inline:true,
 				fields: {
@@ -1441,6 +1444,7 @@
 			});
 
 		/*checkbox behaviour*/
+			/*折扣碼全選*/
 			$('#couponSelectAllCheckbox').change(function(){
 				console.log("couponSelectAllCheckbox changed");
 				var isChecked = $('#couponSelectAllCheckbox').prop('checked');
@@ -1458,6 +1462,7 @@
 	/*Coupons*/
 
 	/*Supplier*/
+	/*供應商*/
 		/*tab behaviour*/
 			$('#tab-name3').tab({
 				evaluateScripts:true,
@@ -1469,12 +1474,15 @@
 			});
 
 		/*refresh*/
+		/*供應商刷新*/
+		
 			$('#Supplier .btnRefresh').click(function(){
 				console.log("btnRefresh clicked");
 				Supplier_getAll();
 			});
 
 		/*insert*/
+		/*供應商新增*/
 			$('#Supplier .btnInsert').click(function(){
 				console.log("btnInsert clicked");
 				Supplier_insert();
@@ -1499,6 +1507,7 @@
 			}
 
 		/*delete*/
+		/*供應商刪除*/
 			$('#Supplier .btnDelete').click(function(){
 				console.log("btnDelete clicked");
 				Supplier_getSelectedToDelete();
@@ -1537,6 +1546,7 @@
 			}
 
 		/*search*/
+		/*供應商查詢*/
 			$('#Supplier .searchBlock .dropdown').dropdown();
 			$('#Supplier .searchBlock .button').click(function(){
 				var keyword = $('#Supplier .searchBlock input').val();
@@ -1610,7 +1620,7 @@
 			});
 
 		/*functions*/
-
+			/*供應商新增*/
 			function Supplier_getAll(){
 				console.log("Supplier_getAll() called");
 
@@ -1691,7 +1701,7 @@
 				$('#Supplier .btnRefresh').removeClass('loading');
 				$('#Supplier .searchBlock .button').removeClass('loading');
 			}
-
+			/*供應商修改function*/
 			function Supplier_update(row){
 				console.log("Supplier_update() called");
 				Supplier_showModal(row);
@@ -1730,6 +1740,7 @@
 			$('#Supplier_modal .form input[name="supplierDate"]').datepicker("option","dateFormat","yy/mm/dd");*/
 
 		/*form validation setting*/
+		/*供應商驗證*/
 			$('#Supplier_modal .form').form({
 				inline:true,
 				fields:{
@@ -1844,6 +1855,7 @@
 	/*Supplier*/
 
 	/*Customer*/
+	/*顧客*/
 		/*tab behaviour*/
 			$('#tab-name2').tab({
 				evaluateScripts:true,
@@ -1855,6 +1867,7 @@
 			});
 
 		/*refresh*/
+		/*顧客刷新*/
 			$('#Customer .btnRefresh').click(function(){
 				console.log("btnRefresh clicked");
 				Customer_getAll();
@@ -1945,6 +1958,7 @@
 			}
 
 		/*insert*/
+		/*顧客新增function*/
 			$('#Customer .btnInsert').click(function(){
 				console.log("btnInsert clicked");
 				Customer_insert();
@@ -2009,13 +2023,14 @@
 				});
 				}
 			})
-
+		/*顧客修改function*/
 			function Customer_update(row){
 				console.log("Customer_update() called");
 				Customer_showModal(row);
 			}
 
 		/*delete*/
+		/*顧客刪除function*/
 			$('#Customer .btnDelete').click(function(){
 				console.log("btnDelete clicked");
 				Customer_getSelectedToDelete();
@@ -2054,6 +2069,7 @@
 			}
 
 		/*search*/
+		/*顧客查詢function*/
 			$('#Customer .searchBlock .dropdown').dropdown();
 			$('#Customer .searchBlock .button').click(function(){
 				var keyword = $('#Customer .searchBlock input').val();
@@ -2154,7 +2170,7 @@
 			});
 
 		/*Modal initializing*/
-			/*notice! modal elements MUST assign an ID*/
+			/*notice! modal elements MUST assign an ID*/		
 			$('#Customer_modal').modal({
 				allowMultiple: true,
 				debug:false,
@@ -2207,6 +2223,7 @@
 			}
 
 		/*form validation setting*/
+		/*顧客驗證*/
 			$('#Customer_modal .form').form({
 				inline:true,
 				fields: {
@@ -2304,6 +2321,7 @@
 	/*Customer*/
 
 	/*Product*/
+	/*零件*/
 		/*tab behaviour*/
 			$('#tab-name1').tab({
 				evaluateScripts:true,
@@ -2315,6 +2333,7 @@
 			});
 
 		/*refresh*/
+		/*零件刷新function*/
 			$('#Product .btnRefresh').click(function(){
 				console.log("btnRefresh clicked");
 				Product_getAll();
@@ -2402,6 +2421,7 @@
 			}
 
 		/*insert*/
+		/*零件新增function*/
 			$('#Product .btnInsert').click(function(){
 				console.log("btnInsert clicked");
 				Product_insert();
@@ -2430,6 +2450,7 @@
 			}
 
 		/*delete*/
+		/*零件刪除function*/
 			$('#Product .btnDelete').click(function(){
 				console.log("btnDelete clicked");
 				Product_getSelectedToDelete();
@@ -2468,6 +2489,7 @@
 			}
 
 		/*search*/
+		/*零件查詢function*/
 			$('#Product .searchBlock .dropdown').dropdown();
 			$('#Product .searchBlock .button').click(function(){
 				var keyword = $('#Product .searchBlock input').val();
@@ -2627,6 +2649,7 @@
 			$('#Product_modal .form .selection.dropdown').dropdown();
 
 		/*form validation setting*/
+		/*零件驗證*/
 			$('#Product_modal .form').form({
 				inline:true,
 				fields: {
@@ -2753,6 +2776,7 @@
 	/*product*/
 
 	/*Purchase*/
+	/*庫存紀錄*/
 		/*tab behaviour*/
 			$('#tab-name6').tab({
 				evaluateScripts:true,
@@ -2764,6 +2788,7 @@
 			});
 
 		/*refresh*/
+		/*庫存紀錄刷新function*/
 			$('#Purchase .btnRefresh').click(function(){
 				console.log("btnRefresh clicked");
 				Purchase_getAll();
@@ -2852,6 +2877,7 @@
 			}
 
 		/*insert*/
+		/*庫存紀錄新增function*/
 			$('#Purchase .btnInsert').click(function(){
 				console.log("btnInsert clicked");
 				Purchase_insert();
@@ -2879,6 +2905,7 @@
 			}
 
 		/*search*/
+		/*庫存紀錄查詢function*/
 			$('#Purchase .searchBlock .dropdown').dropdown();
 			/*<option selected="selected" value="type">紀錄種類</option>
 			<option value="date">日期</option>
@@ -3047,6 +3074,7 @@
 			});
 
 		/*form validation setting*/
+		/*庫存紀錄驗證*/
 			$('#Purchase_modal .form').form({
 				inline:true,
 				fields: {
@@ -3126,6 +3154,7 @@
 	/*Purchase*/
 
 	/*Order*/
+	/*訂單*/
 		/*tab behaviour*/
 			$('#tab-name4').tab({
 				evaluateScripts:true,
@@ -3137,6 +3166,7 @@
 			});
 
 		/*refresh*/
+		/*訂單刷新function*/
 			$('#Order .btnRefresh').click(function(){
 				console.log("btnRefresh clicked");
 				Order_getAll();
@@ -3317,6 +3347,7 @@
 			}
 
 		/*update*/
+		/*訂單更新function*/
 			function Order_update(row){
 				console.log("Order_update() called");
 				if("已下訂(普通)"===row.orderState){
@@ -3343,6 +3374,7 @@
 			}
 
 		/*delete*/
+		/*訂單刪除function*/
 			$('#Order .btnDelete').click(function(){
 				console.log("btnDelete clicked");
 				Order_getSelectedToDelete();
@@ -3381,6 +3413,7 @@
 			}
 
 		/*search*/
+		/*訂單查詢function*/
 			$('#Order .searchBlock .dropdown').dropdown();
 			$('#Order .searchBlock .button').click(function(){
 				var keyword = $('#Order .searchBlock input').val();
@@ -3641,6 +3674,7 @@
 	/*Order*/
 
 	/*Image*/
+	/*圖片管理*/
 		/*tab behaviour*/
 		$('#tab-name7').tab({
 			evaluateScripts:true,
@@ -3652,6 +3686,7 @@
 		});
 
 		/*refresh*/
+		/*圖片管理刷新function*/
 		$('#Image .btnRefresh').click(function(){
 			console.log("btnRefresh clicked");
 			Image_getAll();
@@ -3733,6 +3768,7 @@
 		}
 
 		/*insert*/
+		/*圖片管理新增function*/
 			$('#Image .btnInsert').click(function(){
 				console.log("btnInsert clicked");
 				Image_insert();
@@ -3758,6 +3794,7 @@
 			}
 
 		/*delete*/
+		/*圖片管理刪除function*/
 			$('#Image .btnDelete').click(function(){
 				console.log("btnDelete clicked");
 				Image_getSelectedToDelete();
@@ -3796,6 +3833,7 @@
 			}
 
 		/*search*/
+		/*圖片管理查詢function*/
 			$('#Image .searchBlock .dropdown').dropdown();
 			$('#Image .searchBlock .button').click(function(){
 				$('#Image').addClass('loading');/*loading start*/
@@ -3907,6 +3945,7 @@
 			$('#Image_modal .form .selection.dropdown').dropdown();
 
 		/*form validation setting*/
+		/*圖片管理驗證*/
 			$('#Image_modal .form').form({
 				inline:true,
 				fields: {
@@ -3990,12 +4029,13 @@
 	/*Image*/
 
 	/*setting*/
+	/*設定*/
 		$('#tab-name8').tab({
 			evaluateScripts:true,
 			alwaysRefresh:true,
 			cache:false,
 		});
-
+		/*設定驗證*/
 		$('#Setting .form').form({
 			inline:true,
 			fields:{
