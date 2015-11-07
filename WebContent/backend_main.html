@@ -1101,7 +1101,7 @@
 								</div>
 							</div>
 						</div>
-
+						<!-- 相簿FORM -->
 						<form class="ui form">
 							<div class="three fields">
 								<input type="hidden" name="imageId">
@@ -3868,7 +3868,7 @@
 			$('#Image_modal .form input[name="imagePath"]').blur(function(){
 				$('#Image_modal .imageItem img').attr('src',$('#Image_modal .form input[name="imagePath"]').val());
 			});
-
+		
 			function Image_showModal(card){
 				console.log("Image_showModal() called");
 				$('#Image_modal .form').form('set values', {
